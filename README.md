@@ -4,13 +4,22 @@ This a simple implementation of a Brainfuck compiler that transpiles the brainfu
 
 The only argument it recieves is the program in brainfuck (filename) and an optional --compile flag that decides wether the output will be the interpretation of the program or an "output.c" file the user can later compile to an executable.
 
+Compile the compiler (pun intended) first
+
 ```bash
-# Compile the compiler (pun intended) first
 gcc compiler.c -o compiler
-# Either interpret a file
+```
+
+Either interpret a file
+
+```bash
 ./compiler test.bf # Output: Hello World!
-# Or compile it and run it
+```
+
+Or compile it and run it
+
+```bash
 ./compiler test.bf --compile # Output: output.c
 gcc output.c -o test
-./test2 # Output: Hello World!
+./test # Output: Hello World!
 ```
