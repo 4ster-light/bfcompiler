@@ -1,7 +1,9 @@
-/*
-!README.md
-!*.c
+*
+
+!bf.c
+
 !*.bf
+
 !.gitignore
+!README.md
 !LICENSE
-*/
