@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 #define MAX_PROG_SIZE 30000
 #define MAX_CODE_SIZE 300000
@@ -18,19 +19,22 @@ void compileBrainfuck(const char *bfCode, char *output) {
     int bracketCount = 0;
     char *outPtr = output;
 
-    // Start of the C function
-    outPtr += sprintf(outPtr, "#include <stdio.h>\n#include <stdlib.h>\nint main() {\nunsigned char array[%d] = {0};\nunsigned char *ptr = array;\n", MAX_PROG_SIZE);
+    outPtr += sprintf(outPtr, "#include <stdio.h>\n#include <stdlib.h>\n\n");
 
-    // Bounds checking for pointer movement
-    outPtr += sprintf(outPtr, "void checkBounds() {\nif (ptr < array || ptr >= array + %d) {\nfprintf(stderr, \"Memory access out of bounds\\n\");\nexit(1);\n}\n}\n", MAX_PROG_SIZE);
+    outPtr += sprintf(outPtr, "void checkBounds(unsigned char *ptr, unsigned char *array) {\n");
+    outPtr += sprintf(outPtr, "if (ptr < array || ptr >= array + %d) {\n", MAX_PROG_SIZE);
+    outPtr += sprintf(outPtr, "fprintf(stderr, \"Memory access out of bounds\\n\");\n");
+    outPtr += sprintf(outPtr, "exit(1);\n}\n}\n\n");
+
+    outPtr += sprintf(outPtr, "int main() {\nunsigned char array[%d] = {0};\nunsigned char *ptr = array;\n", MAX_PROG_SIZE);
 
     for (int i = 0; bfCode[i]; i++) {
         switch(bfCode[i]) {
             case '>':
-                outPtr += sprintf(outPtr, "++ptr; checkBounds(); \n");
+                outPtr += sprintf(outPtr, "++ptr; checkBounds(ptr, array);\n");
                 break;
             case '<':
-                outPtr += sprintf(outPtr, "--ptr; checkBounds(); \n");
+                outPtr += sprintf(outPtr, "--ptr; checkBounds(ptr, array);\n");
                 break;
             case '+':
                 outPtr += sprintf(outPtr, "++*ptr;\n");
@@ -55,7 +59,7 @@ void compileBrainfuck(const char *bfCode, char *output) {
                 }
                 break;
             default: 
-                break;  // Ignore other characters as they are comments
+                break;  // Ignore other characters since they are comments
         }
     }
 
@@ -112,22 +116,34 @@ void interpretBrainfuck(const char *bfCode) {
 }
 
 int main(int argc, char **argv) {
-    bool compileMode = false;
-
-    // Check if --compile flag is provided
-    if (argc > 2 && strcmp(argv[argc - 1], "--compile") == 0) {
-        compileMode = true;
-        argc--;  // Remove the --compile flag from argument count
+    if (argc < 3) {
+        fprintf(stderr, "Usage: %s [run|build] <brainfuck_file> [-s|--save]\n", argv[0]);
+        return 1;
     }
 
-    // Check if the correct number of arguments is provided
-    if (argc != 2) {
-        printf("Usage: %s <brainfuck_file> [--compile]\n", argv[0]);
+    bool saveOutput = false;
+    bool buildMode = false;
+
+    // Check for save flag
+    if (argc > 3) {
+        if (strcmp(argv[3], "-s") == 0 || strcmp(argv[3], "--save") == 0) {
+            saveOutput = true;
+        } else {
+            fprintf(stderr, "Unknown option: %s\n", argv[3]);
+            return 1;
+        }
+    }
+
+    // Determine mode
+    if (strcmp(argv[1], "build") == 0) {
+        buildMode = true;
+    } else if (strcmp(argv[1], "run") != 0) {
+        fprintf(stderr, "Invalid mode: %s\n", argv[1]);
         return 1;
     }
 
     // Open the Brainfuck file
-    FILE *file = fopen(argv[1], "r");
+    FILE *file = fopen(argv[2], "r");
     if (!file) {
         perror("Error opening file");
         return 1;
@@ -139,7 +155,7 @@ int main(int argc, char **argv) {
     bfCode[MAX_PROG_SIZE - 1] = '\0';  // Ensure null-termination
     fclose(file);
 
-    if (compileMode) {
+    if (buildMode) {
         char output[MAX_CODE_SIZE];
         compileBrainfuck(bfCode, output);
 
@@ -151,7 +167,24 @@ int main(int argc, char **argv) {
         fprintf(outFile, "%s", output);
         fclose(outFile);
 
-        printf("Brainfuck code has been compiled to output.c\n");
+        // Try compiling with Clang first, if not available, use GCC
+        char compileCommand[256];
+        snprintf(compileCommand, sizeof(compileCommand), "clang -o output output.c || gcc -o output output.c");
+        int compileResult = system(compileCommand);
+        
+        if (compileResult != 0) {
+            fprintf(stderr, "Compilation failed\n");
+            if (!saveOutput) {
+                unlink("output.c");  // Remove the temporary C file if compilation failed
+            }
+            return 1;
+        }
+
+        if (!saveOutput) {
+            unlink("output.c");  // Remove the temporary C file if not saving
+        }
+
+        printf("Compilation successful. Executable named 'output' created.\n");
     } else {
         interpretBrainfuck(bfCode);
     }
