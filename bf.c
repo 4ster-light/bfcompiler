@@ -19,57 +19,48 @@ void checkBounds(unsigned char *ptr, unsigned char *array)
 void compileBrainfuck(const char *bfCode, char *output)
 {
     int dataPtr = 0;
-    int bracketCount = 0;
     char *outPtr = output;
 
-    outPtr += sprintf(outPtr, "#include <stdio.h>\n#include <stdlib.h>\n\n");
+    outPtr += sprintf(outPtr, "#include <stdio.h>\n#include <stdlib.h>\n");
 
-    outPtr += sprintf(outPtr, "void checkBounds(unsigned char *ptr, unsigned char *array) {\n");
-    outPtr += sprintf(outPtr, "if (ptr < array || ptr >= array + %d) {\n", MAX_PROG_SIZE);
-    outPtr += sprintf(outPtr, "fprintf(stderr, \"Memory access out of bounds\\n\");\n");
-    outPtr += sprintf(outPtr, "exit(1);\n}\n}\n\n");
+    outPtr += sprintf(outPtr, "void checkBounds(unsigned char *ptr, unsigned char *array) {if (ptr < array || ptr >= array + %d) {fprintf(stderr, \"Memory access out of bounds\\n\");exit(1);}}\n", MAX_PROG_SIZE);
 
-    outPtr += sprintf(outPtr, "int main() {\nunsigned char array[%d] = {0};\nunsigned char *ptr = array;\n", MAX_PROG_SIZE);
+    outPtr += sprintf(outPtr, "int main() {unsigned char array[%d] = {0};unsigned char *ptr = array;", MAX_PROG_SIZE);
 
     for (int i = 0; bfCode[i]; i++)
     {
         switch (bfCode[i])
         {
         case '>':
-            outPtr += sprintf(outPtr, "++ptr; checkBounds(ptr, array);\n");
+            outPtr += sprintf(outPtr, "++ptr;checkBounds(ptr, array);");
             break;
         case '<':
-            outPtr += sprintf(outPtr, "--ptr; checkBounds(ptr, array);\n");
+            outPtr += sprintf(outPtr, "--ptr;checkBounds(ptr, array);");
             break;
         case '+':
-            outPtr += sprintf(outPtr, "++*ptr;\n");
+            outPtr += sprintf(outPtr, "++*ptr;");
             break;
         case '-':
-            outPtr += sprintf(outPtr, "--*ptr;\n");
+            outPtr += sprintf(outPtr, "--*ptr;");
             break;
         case '.':
-            outPtr += sprintf(outPtr, "putchar(*ptr);\n");
+            outPtr += sprintf(outPtr, "putchar(*ptr);");
             break;
         case ',':
-            outPtr += sprintf(outPtr, "*ptr=getchar();\n");
+            outPtr += sprintf(outPtr, "*ptr=getchar();");
             break;
         case '[':
-            outPtr += sprintf(outPtr, "while (*ptr) {\n");
-            bracketCount++;
+            outPtr += sprintf(outPtr, "while(*ptr) {");
             break;
         case ']':
-            if (bracketCount > 0)
-            {
-                outPtr += sprintf(outPtr, "}\n");
-                bracketCount--;
-            }
+            outPtr += sprintf(outPtr, "}");
             break;
         default:
-            break; // Ignore other characters since they are comments
+            break;
         }
     }
 
-    outPtr += sprintf(outPtr, "return 0;\n}\n");
+    outPtr += sprintf(outPtr, "return 0;}");
 }
 
 void interpretBrainfuck(const char *bfCode)
@@ -82,7 +73,7 @@ void interpretBrainfuck(const char *bfCode)
 
     while (*codePtr)
     {
-        checkBounds(ptr, array); // Check bounds before any operation
+        checkBounds(ptr, array);
 
         switch (*codePtr)
         {
@@ -158,7 +149,6 @@ int main(int argc, char **argv)
     bool saveOutput = false;
     bool buildMode = false;
 
-    // Check for save flag
     if (argc > 3)
     {
         if (strcmp(argv[3], "-s") == 0 || strcmp(argv[3], "--save") == 0)
@@ -172,7 +162,6 @@ int main(int argc, char **argv)
         }
     }
 
-    // Determine mode
     if (strcmp(argv[1], "build") == 0)
     {
         buildMode = true;
@@ -183,7 +172,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    // Open the Brainfuck file
     FILE *file = fopen(argv[2], "r");
     if (!file)
     {
@@ -230,8 +218,6 @@ int main(int argc, char **argv)
         {
             unlink("output.c"); // Remove the temporary C file if not saving
         }
-
-        printf("Compilation successful. Executable named 'output' created.\n");
     }
     else
     {
