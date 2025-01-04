@@ -174,8 +174,8 @@ fn main() -> io::Result<()> {
                         return Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"));
                     }
                 }
-                Err(e) => {
-                    return Err(io::Error::new(io::ErrorKind::ReadOnlyFilesystem, e));
+                Err(_) => {
+                    return Err(io::Error::new(io::ErrorKind::ReadOnlyFilesystem, "Could not write to file"));
                 }
             }
         }

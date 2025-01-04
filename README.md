@@ -17,13 +17,13 @@ Everything will be explained with Cargo, but you can also use the binary if you 
 ### Build
 
 ```bash
-cargo build <file>
+cargo run -- build <file>
 ```
 
 If you want to save the intermediate code representation, you can add the `--save` flag.
 
 ```bash
-cargo build <file> --save # or -s
+cargo run -- build <file> --save # or -s
 ```
 
 ### Run
@@ -31,13 +31,13 @@ cargo build <file> --save # or -s
 You can run the file directly like any other interpreted language would with:
 
 ```bash
-cargo run <file>
+cargo run -- run <file>
 ```
 
 Or you can use the REPL mode with:
 
 ```bash
-cargo run repl
+cargo run -- repl
 ```
 
 And then you can enter your Brainfuck code and it will be executed.
