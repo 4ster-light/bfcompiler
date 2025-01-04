@@ -13,7 +13,7 @@ fn check_bounds(ptr: usize, array: &[u8]) -> Result<(), String> {
     }
 }
 
-fn compile_brainfuck(bf_code: &str) -> String {
+fn compile_bf(bf_code: &str) -> String {
     let mut output = String::new();
     output.push_str("fn main() -> Result<(), Box<dyn std::error::Error>> {let mut array = [0u8; ");
     output.push_str(&MAX_PROG_SIZE.to_string());
@@ -47,7 +47,7 @@ fn compile_brainfuck(bf_code: &str) -> String {
     output
 }
 
-fn interpret_brainfuck(bf_code: &str) -> io::Result<()> {
+fn interpret_bf(bf_code: &str) -> io::Result<()> {
     let mut array = [0u8; MAX_PROG_SIZE];
     let mut ptr: usize = 0;
     let mut code_ptr = 0;
@@ -109,48 +109,93 @@ fn interpret_brainfuck(bf_code: &str) -> io::Result<()> {
     Ok(())
 }
 
+fn repl_bf() -> io::Result<()> {
+    println!("Brainfuck REPL. Type 'exit' to quit.");
+    loop {
+        print!("> ");
+        io::stdout().flush()?;
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)?;
+
+        if input.trim() == "exit" {
+            break;
+        }
+
+        interpret_bf(input.trim())?;
+    }
+    Ok(())
+}
+
 fn main() -> io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
-    if args.len() < 3 {
-        eprintln!(
-            "Usage: {} [run|build] <brainfuck_file> [-s|--save]",
-            args[0]
-        );
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
-            "Incorrect number of arguments",
-        ));
-    }
-
-    let build_mode = args[1] == "build";
-    let save_output = args.len() > 3 && (args[3] == "-s" || args[3] == "--save");
-
-    let bf_path = Path::new(&args[2]);
-    let mut bf_file = File::open(bf_path)?;
-    let mut bf_code = String::new();
-    bf_file.read_to_string(&mut bf_code)?;
-
-    if build_mode {
-        let rust_code = compile_brainfuck(&bf_code);
-        let mut out_file = File::create("output.rs")?;
-        out_file.write_all(rust_code.as_bytes())?;
-
-        let status = Command::new("rustc")
-            .arg("output.rs")
-            .arg("-o")
-            .arg("output")
-            .status()?;
-
-        if status.success() {
-            if !save_output {
-                std::fs::remove_file("output.rs")?;
-            }
-        } else {
-            return Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"));
+    let mode = match args.get(1) {
+        Some(mode) => mode,
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "No mode specified",
+            ))
         }
-    } else {
-        interpret_brainfuck(&bf_code)?;
+    };
+    let bf_path = match args.get(2) {
+        Some(path) => Path::new(path),
+        None => {
+            if mode == "repl" {
+                Path::new("")
+            } else {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "No file specified",
+                ));
+            }
+        }
+    };
+
+    match mode.as_str() {
+        "build" => {
+            let bf_code = read_bf_file(bf_path)?;
+            let rust_code = compile_bf(&bf_code);
+
+            match File::create("output.rs")?.write_all(rust_code.as_bytes()) {
+                Ok(_) => {
+                    let status = Command::new("rustc")
+                        .arg("output.rs")
+                        .arg("-o")
+                        .arg("output")
+                        .status()?;
+                    if status.success() {
+                        let save_output =
+                            args.len() > 3 && (args[3] == "-s" || args[3] == "--save");
+                        if !save_output {
+                            std::fs::remove_file("output.rs")?;
+                        }
+                    } else {
+                        return Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"));
+                    }
+                }
+                Err(e) => {
+                    return Err(io::Error::new(io::ErrorKind::ReadOnlyFilesystem, e));
+                }
+            }
+        }
+        "run" => {
+            let bf_code = read_bf_file(bf_path)?;
+            interpret_bf(&bf_code)?;
+        }
+        "repl" => repl_bf()?,
+        _ => {
+            eprintln!("Invalid mode: {}", mode);
+            return Err(io::Error::new(io::ErrorKind::InvalidInput, "Invalid mode"));
+        }
     }
 
     Ok(())
+}
+
+fn read_bf_file(bf_path: &Path) -> io::Result<String> {
+    let mut bf_file = File::open(bf_path)?;
+    let mut bf_code = String::new();
+    bf_file.read_to_string(&mut bf_code)?;
+    Ok(bf_code)
 }
