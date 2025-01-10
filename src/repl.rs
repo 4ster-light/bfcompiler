@@ -1,6 +1,5 @@
-use std::io::{self, Write};
-
 use crate::interpreter::interpret_bf;
+use std::io::{self, Write};
 
 pub fn repl_bf() -> io::Result<()> {
     println!("Brainfuck REPL. Type 'exit' to quit.");

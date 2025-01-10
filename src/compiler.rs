@@ -1,6 +1,10 @@
-use crate::MAX_PROG_SIZE;
+use crate::util::{read_bf_file, MAX_PROG_SIZE};
+use std::fs::File;
+use std::io::{self, Write};
+use std::path::PathBuf;
+use std::process::Command;
 
-pub fn compile_bf(bf_code: &str) -> String {
+fn compile_bf(bf_code: &str) -> String {
     let mut output = String::new();
     output.push_str("fn main() -> Result<(), Box<dyn std::error::Error>> {let mut array = [0u8; ");
     output.push_str(&MAX_PROG_SIZE.to_string());
@@ -32,4 +36,22 @@ pub fn compile_bf(bf_code: &str) -> String {
     output.push_str(&MAX_PROG_SIZE.to_string());
     output.push_str(" { Err(\"Memory access out of bounds\".to_string()) } else { Ok(()) }}");
     output
+}
+
+pub fn build_bf(bf_path: PathBuf, save_output: bool) -> io::Result<()> {
+    File::create("output.rs")?.write_all(compile_bf(&read_bf_file(&bf_path)?).as_bytes())?;
+
+    let status = Command::new("rustc")
+        .arg("output.rs")
+        .arg("-o")
+        .arg("output")
+        .status()?;
+    if status.success() {
+        if !save_output {
+            std::fs::remove_file("output.rs")?;
+        }
+        Ok(())
+    } else {
+        return Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"));
+    }
 }
