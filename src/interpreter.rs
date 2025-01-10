@@ -1,13 +1,5 @@
-use crate::MAX_PROG_SIZE;
+use crate::util::MAX_PROG_SIZE;
 use std::io::{self, Read};
-
-fn check_bounds(ptr: usize, array: &[u8]) -> Result<(), String> {
-    if ptr >= array.len() {
-        Err("Memory access out of bounds".to_string())
-    } else {
-        Ok(())
-    }
-}
 
 pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
     let mut array = [0u8; MAX_PROG_SIZE];
@@ -69,4 +61,12 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
         code_ptr += 1;
     }
     Ok(())
+}
+
+fn check_bounds(ptr: usize, array: &[u8]) -> Result<(), String> {
+    if ptr >= array.len() {
+        Err("Memory access out of bounds".to_string())
+    } else {
+        Ok(())
+    }
 }

@@ -48,6 +48,8 @@ And then you can enter your Brainfuck code and it will be executed.
 ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.
 ```
 
+(Look the hello.bf file at the root of the repo for a more detailed explanation)
+
 Output:
 
 ```txt
