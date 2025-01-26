@@ -1,4 +1,4 @@
-use crate::util::{read_bf_file, MAX_PROG_SIZE};
+use crate::utils::{read_bf_file, MAX_PROG_SIZE};
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -52,6 +52,6 @@ pub fn build_bf(bf_path: PathBuf, save_output: bool) -> io::Result<()> {
         }
         Ok(())
     } else {
-        return Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"));
+        Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"))
     }
 }
