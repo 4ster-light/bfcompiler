@@ -1,4 +1,4 @@
-use crate::util::MAX_PROG_SIZE;
+use crate::utils::MAX_PROG_SIZE;
 use std::io::{self, Read};
 
 pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
