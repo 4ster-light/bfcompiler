@@ -6,6 +6,10 @@ You need to have Rust installed, which is usually done via curl to get Rust up (
 
 If you want to install it after cloning the repo, you can do so with
 
+> [!IMPORTANT]
+> There is also a `prototype.rkt` file inside of src/ which you can run with the racket interpreter without dependencies, it's the original version of this program when I first got interested on this project.
+>
+
 ```bash
 cargo install --path .
 ```
@@ -40,7 +44,7 @@ Or you can use the REPL mode with:
 cargo run -- repl
 ```
 
-And then you can enter your Brainfuck code and it will be executed.
+And then you can enter your Brainfuck code, and it will be executed.
 
 ## Example
 
