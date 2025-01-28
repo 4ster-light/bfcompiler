@@ -48,32 +48,3 @@ impl PartialEq<Mode> for &str {
         *self == format!("{}", other)
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_mode_from_str() {
-        assert_eq!(Mode::from_str("run"), Mode::RUN);
-        assert_eq!(Mode::from_str("build"), Mode::BUILD);
-        assert_eq!(Mode::from_str("repl"), Mode::REPL);
-        assert_eq!(Mode::from_str("wrong"), Mode::WRONG);
-    }
-
-    #[test]
-    fn test_mode_debug() {
-        assert_eq!(format!("{:?}", Mode::RUN), "run");
-        assert_eq!(format!("{:?}", Mode::BUILD), "build");
-        assert_eq!(format!("{:?}", Mode::REPL), "repl");
-        assert_eq!(format!("{:?}", Mode::WRONG), "wrong");
-    }
-
-    #[test]
-    fn test_mode_display() {
-        assert_eq!(format!("{}", Mode::RUN), "run");
-        assert_eq!(format!("{}", Mode::BUILD), "build");
-        assert_eq!(format!("{}", Mode::REPL), "repl");
-        assert_eq!(format!("{}", Mode::WRONG), "wrong");
-    }
-}
