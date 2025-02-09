@@ -7,7 +7,7 @@ You need to have Rust installed, which is usually done via curl to get Rust up (
 If you want to install it after cloning the repo, you can do so with
 
 > [!IMPORTANT]
-> There is also a `prototype.rkt` file inside of src/ which you can run with the racket interpreter without dependencies, it's the original version of this program when I first got interested on this project.
+> There is also a `bf.rkt` file inside of the "scripts" directory, as well as a documented Hello World program in Brainfuck which you can run with the racket interpreter without dependencies, it's the original version of this program when I first got interested on this project.
 >
 
 ```bash

@@ -1,8 +1,9 @@
 use crate::interpreter::interpret_bf;
+use colored::*;
 use std::io::{self, Write};
 
 pub fn repl_bf() -> io::Result<()> {
-    println!("Brainfuck REPL. Type 'exit' to quit.");
+    println!("{}", "Brainfuck REPL. Type 'exit' to quit.".blue().bold());
     loop {
         let mut input = String::new();
         print!("> ");
@@ -11,7 +12,9 @@ pub fn repl_bf() -> io::Result<()> {
         if input.trim() == "exit" {
             break;
         }
-        interpret_bf(input.trim())?;
+        if let Err(e) = interpret_bf(input.trim()) {
+            eprintln!("{}: {}", "Error".red(), e);
+        }
     }
     Ok(())
 }

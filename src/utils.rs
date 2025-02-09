@@ -2,8 +2,7 @@ use crate::mode::Mode;
 use std::env::args;
 use std::fs::File;
 use std::io::{self, Read};
-use std::path::Path;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 pub const MAX_PROG_SIZE: usize = 30_000;
 
