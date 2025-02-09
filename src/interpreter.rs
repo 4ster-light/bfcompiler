@@ -1,4 +1,5 @@
 use crate::utils::MAX_PROG_SIZE;
+use colored::*;
 use std::io::{self, Read};
 
 pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
@@ -15,7 +16,7 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
             '<' => {
                 ptr = ptr.checked_sub(1).ok_or(io::Error::new(
                     io::ErrorKind::Other,
-                    "Memory access out of bounds",
+                    "Memory access out of bounds".red().to_string(),
                 ))?
             }
             '+' => array[ptr] = array[ptr].wrapping_add(1),
@@ -39,7 +40,7 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
                             None => {
                                 return Err(io::Error::new(
                                     io::ErrorKind::Other,
-                                    "Mismatched brackets",
+                                    "Mismatched brackets".red().to_string(),
                                 ))
                             }
                             _ => {}
@@ -49,9 +50,10 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
             }
             ']' => {
                 if array[ptr] != 0 {
-                    code_ptr = *loop_stack
-                        .last()
-                        .ok_or(io::Error::new(io::ErrorKind::Other, "Mismatched brackets"))?;
+                    code_ptr = *loop_stack.last().ok_or(io::Error::new(
+                        io::ErrorKind::Other,
+                        "Mismatched brackets".red().to_string(),
+                    ))?;
                 } else {
                     loop_stack.pop();
                 }
@@ -65,7 +67,7 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
 
 fn check_bounds(ptr: usize, array: &[u8]) -> Result<(), String> {
     if ptr >= array.len() {
-        Err("Memory access out of bounds".to_string())
+        Err("Memory access out of bounds".red().to_string())
     } else {
         Ok(())
     }

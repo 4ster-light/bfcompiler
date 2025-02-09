@@ -1,4 +1,5 @@
 use crate::utils::{read_bf_file, MAX_PROG_SIZE};
+use colored::*;
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -39,19 +40,24 @@ fn compile_bf(bf_code: &str) -> String {
 }
 
 pub fn build_bf(bf_path: PathBuf, save_output: bool) -> io::Result<()> {
-    File::create("output.rs")?.write_all(compile_bf(&read_bf_file(&bf_path)?).as_bytes())?;
+    let mut output_file = File::create("output.rs")?;
+    output_file.write_all(compile_bf(&read_bf_file(&bf_path)?).as_bytes())?;
 
     let status = Command::new("rustc")
         .arg("output.rs")
         .arg("-o")
         .arg("output")
         .status()?;
+
     if status.success() {
         if !save_output {
             std::fs::remove_file("output.rs")?;
         }
         Ok(())
     } else {
-        Err(io::Error::new(io::ErrorKind::Other, "Compilation failed"))
+        Err(io::Error::new(
+            io::ErrorKind::Other,
+            "Compilation failed".red().to_string(),
+        ))
     }
 }
