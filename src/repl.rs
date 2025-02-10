@@ -1,5 +1,5 @@
 use crate::interpreter::interpret_bf;
-use colored::*;
+use colored::Colorize;
 use std::io::{self, Write};
 
 pub fn repl_bf() -> io::Result<()> {

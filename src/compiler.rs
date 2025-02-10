@@ -1,5 +1,5 @@
 use crate::utils::{read_bf_file, MAX_PROG_SIZE};
-use colored::*;
+use colored::Colorize;
 use std::fs::File;
 use std::io::{self, Write};
 use std::path::PathBuf;
