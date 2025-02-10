@@ -5,7 +5,7 @@ use bfcompiler::{
     repl::repl_bf,
     utils::{parse_args, read_bf_file},
 };
-use colored::*;
+use colored::Colorize;
 use std::io;
 
 fn main() -> io::Result<()> {

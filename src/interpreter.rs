@@ -1,5 +1,5 @@
 use crate::utils::MAX_PROG_SIZE;
-use colored::*;
+use colored::Colorize;
 use std::io::{self, Read};
 
 pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
