@@ -4,11 +4,13 @@ This a simple implementation of a Brainfuck compiler in Rust, has several modes 
 
 You need to have Rust installed, which is usually done via curl to get Rust up (further instructions in the Rust home page), or at least rustc rust compiler with the std lib.
 
-If you want to install it after cloning the repo, you can do so with
+## Brainfuck Interpreter Prototypes
 
-> [!IMPORTANT]
-> There is also a `bf.rkt` file inside of the "scripts" directory, as well as a documented Hello World program in Brainfuck which you can run with the racket interpreter without dependencies, it's the original version of this program when I first got interested on this project.
->
+This project includes two simple prototypes for a Brainfuck interpreter: `bf.lua` and `bf.rkt`.
+
+## Installation
+
+If you want to install it after cloning the repo, you can do so with
 
 ```bash
 cargo install --path .
