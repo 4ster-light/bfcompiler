@@ -6,7 +6,7 @@ You need to have Rust installed, which is usually done via curl to get Rust up (
 
 ## Brainfuck Interpreter Prototypes
 
-This project includes two simple prototypes for a Brainfuck interpreter: `bf.lua` and `bf.rkt`.
+This project includes two simple prototypes for a Brainfuck interpreter: `bf.lua` and `bf.go`.
 
 ## Installation
 
