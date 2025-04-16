@@ -17,9 +17,9 @@ func check_bounds(ptr int, array []byte) {
 
 func interpret_bf(bfCode string) {
 	array := make([]byte, MAX_PROG_SIZE)
-	ptr := 0
-	codePtr := 0
-	loopStack := []int{}
+	var ptr int
+	var codePtr int
+	var loopStack []int
 
 	for codePtr < len(bfCode) {
 		check_bounds(ptr, array)

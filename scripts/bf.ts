@@ -23,7 +23,9 @@ function findMatchingBrackets(code: string): Map<number, number> {
   for (const [i, char] of code.split("").entries()) {
     if (char === "[") stack.push(i)
     else if (char === "]") {
-      if (stack.length === 0) throw new UnmatchedBracket("Unmatched closing bracket")
+      if (stack.length === 0) {
+        throw new UnmatchedBracket("Unmatched closing bracket")
+      }
       const openPos = stack.pop()!
       brackets.set(openPos, i)
       brackets.set(i, openPos)
@@ -86,9 +88,8 @@ if (args.length !== 1) {
   Deno.exit(1)
 }
 
-await Deno.readTextFile(args[0]).then(code => {
-  return interpretBF(code)
-}).catch(e => {
-  console.error(`Error: ${e.message}`)
-  Deno.exit(1)
-})
+await Deno.readTextFile(args[0]).then(async (code) => await interpretBF(code))
+  .catch((e) => {
+    console.error(`Error: ${e.message}`)
+    Deno.exit(1)
+  })
