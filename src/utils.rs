@@ -1,25 +1,20 @@
-use crate::mode::Mode;
-use std::env::args;
+use crate::error::Error;
 use std::fs::File;
-use std::io::{self, Read};
-use std::path::{Path, PathBuf};
+use std::io::Read;
+use std::path::Path;
 
 pub const MAX_PROG_SIZE: usize = 30_000;
 
-pub fn read_bf_file(bf_path: &Path) -> io::Result<String> {
-    let mut bf_file = File::open(bf_path)?;
+pub fn read_bf_file(bf_path: &Path) -> anyhow::Result<String> {
+    if !bf_path.exists() || !bf_path.is_file() {
+        return Err(Error::InvalidPath(bf_path.display().to_string()).into());
+    }
+    if bf_path.extension().and_then(|ext| ext.to_str()) != Some("bf") {
+        return Err(Error::InvalidExtension(bf_path.display().to_string()).into());
+    }
+    let mut bf_file =
+        File::open(bf_path).map_err(|e| Error::FileRead(bf_path.display().to_string(), e))?;
     let mut bf_code = String::new();
     bf_file.read_to_string(&mut bf_code)?;
     Ok(bf_code)
-}
-
-pub fn parse_args() -> (Mode, PathBuf, bool) {
-    let args: Vec<String> = args().collect();
-    let mode = args.get(1).map_or(Mode::WRONG, |m| Mode::from_str(m));
-    let bf_path = args
-        .get(2)
-        .map_or(PathBuf::new(), |p| Path::new(p).to_path_buf());
-    let save_output = args.len() > 3 && (args[3] == "-s" || args[3] == "--save");
-
-    (mode, bf_path, save_output)
 }
