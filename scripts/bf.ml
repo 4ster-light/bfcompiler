@@ -50,14 +50,11 @@ let interpret_bf code =
   loop 0 0
 
 let () =
-  if Array.length Sys.argv < 2 then
-    Printf.eprintf "Usage: %s <filename>\n" Sys.argv.(0)
-  else try
-    interpret_bf (
-      In_channel.with_open_text Sys.argv.(1)
-      (fun ic -> In_channel.input_all ic)
-    )
-  with
+  if Array.length Sys.argv < 2 then Printf.eprintf "Usage: %s <filename>\n" Sys.argv.(0)
+  else try interpret_bf (
+    In_channel.with_open_text Sys.argv.(1) 
+    (fun ic -> In_channel.input_all ic)
+  ) with
   | Sys_error msg -> Printf.eprintf "Error: %s\n" msg
   | Memory_out_of_bounds -> Printf.eprintf "Error: Memory access out of bounds\n"
   | Unmatched_bracket -> Printf.eprintf "Error: Unmatched bracket\n"
