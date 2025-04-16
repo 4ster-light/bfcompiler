@@ -57,13 +57,16 @@ cargo run --release -- repl
 
 And then you can enter your Brainfuck code, and it will be executed.
 
+### Help
+
+If no command is given or if you use the `--help` flag it'll display the due help message
+and if the same flag is used in any of the commands it'll show relevant information too.
+
 ## Example
 
 ```brainfuck
 ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.
 ```
-
-(Look the `./scripts/hello.bf` for a more detailed explanation)
 
 Output:
 

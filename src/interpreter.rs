@@ -1,23 +1,22 @@
+use crate::error::Error;
 use crate::utils::MAX_PROG_SIZE;
-use colored::Colorize;
 use std::io::{self, Read};
 
-pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
+pub fn interpret_bf(bf_code: &str) -> anyhow::Result<()> {
     let mut array = [0u8; MAX_PROG_SIZE];
-    let mut ptr: usize = 0;
+    let mut ptr = 0;
     let mut code_ptr = 0;
     let mut loop_stack = Vec::new();
 
     while code_ptr < bf_code.len() {
-        check_bounds(ptr, &array).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        if ptr >= array.len() {
+            return Err(Error::BoundsError(ptr).into());
+        }
 
         match bf_code.chars().nth(code_ptr).unwrap() {
             '>' => ptr += 1,
             '<' => {
-                ptr = ptr.checked_sub(1).ok_or(io::Error::new(
-                    io::ErrorKind::Other,
-                    "Memory access out of bounds".red().to_string(),
-                ))?
+                ptr = ptr.checked_sub(1).ok_or_else(|| Error::BoundsError(ptr))?;
             }
             '+' => array[ptr] = array[ptr].wrapping_add(1),
             '-' => array[ptr] = array[ptr].wrapping_sub(1),
@@ -37,12 +36,7 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
                         match bf_code.chars().nth(code_ptr) {
                             Some('[') => depth += 1,
                             Some(']') => depth -= 1,
-                            None => {
-                                return Err(io::Error::new(
-                                    io::ErrorKind::Other,
-                                    "Mismatched brackets".red().to_string(),
-                                ))
-                            }
+                            None => return Err(Error::MismatchedBrackets(code_ptr).into()),
                             _ => {}
                         }
                     }
@@ -50,10 +44,9 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
             }
             ']' => {
                 if array[ptr] != 0 {
-                    code_ptr = *loop_stack.last().ok_or(io::Error::new(
-                        io::ErrorKind::Other,
-                        "Mismatched brackets".red().to_string(),
-                    ))?;
+                    code_ptr = *loop_stack
+                        .last()
+                        .ok_or(Error::MismatchedBrackets(code_ptr))?;
                 } else {
                     loop_stack.pop();
                 }
@@ -62,13 +55,11 @@ pub fn interpret_bf(bf_code: &str) -> io::Result<()> {
         }
         code_ptr += 1;
     }
-    Ok(())
-}
 
-fn check_bounds(ptr: usize, array: &[u8]) -> Result<(), String> {
-    if ptr >= array.len() {
-        Err("Memory access out of bounds".red().to_string())
-    } else {
-        Ok(())
+    if !loop_stack.is_empty() {
+        return Err(Error::MismatchedBrackets(code_ptr).into());
     }
+
+    print!("\n");
+    Ok(())
 }
