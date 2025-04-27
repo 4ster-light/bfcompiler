@@ -5,7 +5,7 @@ class MemoryOutOfBounds extends Error {
 }
 
 class UnmatchedBracket extends Error {
-  constructor(message: string) {
+  constructor(message: "Unmatched closing bracket" | "Unmatched opening bracket") {
     super(message)
   }
 }
