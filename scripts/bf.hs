@@ -9,22 +9,20 @@ import Data.IntMap.Strict qualified as IntMap
 import System.Environment (getArgs)
 import System.IO (hFlush, stdout)
 
-data BrainfuckError = MemoryOutOfBounds | UnmatchedBracket deriving (Show)
+data BrainfuckError
+  = MemoryOutOfBounds
+  | UnmatchedBracket
+  deriving (Show)
 
 instance Exception BrainfuckError
-
-type Memory = Array Int Int
-
-type Brackets = IntMap Int
 
 maxProgSize :: Int
 maxProgSize = 30000
 
-checkBounds :: Int -> Memory -> IO ()
-checkBounds ptr mem =
-  when (ptr < 0 || ptr >= maxProgSize) $ throwIO MemoryOutOfBounds
+checkBounds :: Int -> Array Int Int -> IO ()
+checkBounds ptr mem = when (ptr < 0 || ptr >= maxProgSize) $ throwIO MemoryOutOfBounds
 
-findMatchingBrackets :: String -> Either BrainfuckError Brackets
+findMatchingBrackets :: String -> Either BrainfuckError (IntMap Int)
 findMatchingBrackets code = go 0 [] IntMap.empty
   where
     go i stack brackets
@@ -38,7 +36,7 @@ findMatchingBrackets code = go 0 [] IntMap.empty
             [] -> Left UnmatchedBracket
           _ -> go (i + 1) stack brackets
 
-interpretBF :: String -> Brackets -> IO ()
+interpretBF :: String -> IntMap Int -> IO ()
 interpretBF code brackets = do
   let memory = array (0, maxProgSize - 1) [(i, 0) | i <- [0 .. maxProgSize - 1]]
   loop 0 0 memory
