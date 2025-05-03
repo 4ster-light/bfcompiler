@@ -2,7 +2,6 @@ use bfcompiler::{
     compiler::build_bf, interpreter::interpret_bf, repl::repl_bf, utils::read_bf_file,
 };
 use clap::{Parser, Subcommand};
-use colored::Colorize;
 use std::path::PathBuf;
 
 #[derive(Parser)]
@@ -39,21 +38,10 @@ enum Commands {
 }
 
 fn main() -> anyhow::Result<()> {
-    let cli = Cli::parse();
-
-    match cli.command {
-        Commands::Run { file } => {
-            let bf_code = read_bf_file(&file)?;
-            interpret_bf(&bf_code)?;
-            println!("{}", "Execution successful!".green().bold());
-        }
-        Commands::Build { file, save } => {
-            build_bf(file, save)?;
-            println!("{}", "Build successful!".green().bold());
-        }
-        Commands::Repl => {
-            repl_bf()?;
-        }
+    match Cli::parse().command {
+        Commands::Run { file } => interpret_bf(&read_bf_file(&file)?)?,
+        Commands::Build { file, save } => build_bf(file, save)?,
+        Commands::Repl => repl_bf()?,
     }
     Ok(())
 }

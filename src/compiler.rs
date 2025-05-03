@@ -1,5 +1,6 @@
 use crate::error::Error;
 use crate::utils::{read_bf_file, MAX_PROG_SIZE};
+use colored::Colorize;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
@@ -32,6 +33,7 @@ fn compile_bf(bf_code: &str) -> anyhow::Result<String> {
     if needs_io {
         output.push_str("use std::io;\n");
     }
+
     output.push_str("fn main() -> Result<(), Box<dyn std::error::Error>> {");
 
     output.push_str(&format!(
@@ -39,6 +41,7 @@ fn compile_bf(bf_code: &str) -> anyhow::Result<String> {
         if needs_mut_array { "mut " } else { "" },
         MAX_PROG_SIZE
     ));
+
     output.push_str(&format!(
         "let {}ptr: usize = 0;",
         if needs_mut_ptr { "mut " } else { "" }
@@ -75,10 +78,11 @@ fn compile_bf(bf_code: &str) -> anyhow::Result<String> {
             output.push_str("check_bounds(ptr, &array)?;");
         }
     }
+
     if bracket_count != 0 {
         return Err(Error::MismatchedBrackets(bf_code.len()).into());
     }
-    output.push_str("println!(\"\");");
+
     output.push_str("Ok(())}");
 
     if needs_bounds_check {
@@ -93,10 +97,10 @@ fn compile_bf(bf_code: &str) -> anyhow::Result<String> {
 
 pub fn build_bf(bf_path: PathBuf, save_output: bool) -> anyhow::Result<()> {
     let bf_code = read_bf_file(&bf_path)?;
-    eprintln!("Building BF file: {:?}\nCode: {}", bf_path, bf_code);
     let compiled_code = compile_bf(&bf_code)?;
     let output_rs = bf_path.with_extension("rs");
     let mut output_file = File::create(&output_rs)?;
+
     output_file.write_all(compiled_code.as_bytes())?;
 
     let output_bin = bf_path.with_extension("");
@@ -111,6 +115,7 @@ pub fn build_bf(bf_path: PathBuf, save_output: bool) -> anyhow::Result<()> {
         if !save_output {
             std::fs::remove_file(&output_rs)?;
         }
+        println!("{}", "Build successful!".green().bold());
         Ok(())
     } else {
         let stderr = String::from_utf8_lossy(&status.stderr);
