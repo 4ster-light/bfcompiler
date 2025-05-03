@@ -2,3 +2,6 @@
 output
 output.rs
 .vscode
+.idea
+bin
+obj

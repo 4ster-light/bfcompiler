@@ -13,7 +13,7 @@ func checkBounds(ptr: Int, array: [Int]) throws {
     }
 }
 
-func findMatchingBrackets(code: String) throws -> [Int] {
+func findMatchingBrackets(_ code: String) throws -> [Int] {
     var brackets = Array(repeating: -1, count: code.count)
     var stack: [Int] = []
 
@@ -40,9 +40,9 @@ func findMatchingBrackets(code: String) throws -> [Int] {
     return brackets
 }
 
-func interpretBF(code: String) throws {
+func interpretBF(_ code: String) throws {
     var array = Array(repeating: 0, count: maxProgSize)
-    let brackets = try findMatchingBrackets(code: code)
+    let brackets = try findMatchingBrackets(code)
     var ptr = 0
     var codePtr = code.startIndex
 
@@ -91,7 +91,7 @@ do {
         exit(1)
     }
 
-    try interpretBF(code: try String(contentsOfFile: CommandLine.arguments[1], encoding: .utf8))
+    try interpretBF(try String(contentsOfFile: CommandLine.arguments[1], encoding: .utf8))
 } catch InterpreterError.memoryOutOfBounds {
     print("Error: Memory access out of bounds")
 } catch InterpreterError.unmatchedBracket {
