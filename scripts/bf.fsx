@@ -68,16 +68,12 @@ let interpret (code: string) =
 
     loop 0 0
 
-[<EntryPoint>]
-let main argv =
-    if argv.Length < 1 then
-        Console.Error.WriteLine("Usage: dotnet run <filename>")
-        1
-    else
-        try
-            let code = File.ReadAllText(argv.[0])
-            interpret code
-            0
-        with ex ->
-            Console.Error.WriteLine($"Error: {ex.Message}")
-            1
+let args = fsi.CommandLineArgs |> Array.skip 1
+
+if args.Length < 1 then
+    Console.Error.WriteLine "Usage: dotnet fsi script.fsx <filename>"
+else
+    try
+        File.ReadAllText(args.[0]) |> interpret
+    with ex ->
+        Console.Error.WriteLine $"Error: {ex.Message}"
