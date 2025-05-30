@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-class Program
+internal static class Program
 {
     private const int MAX_PROG_SIZE = 30000;
 
@@ -98,7 +98,7 @@ class Program
         }
     }
 
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         if (args.Length != 1)
         {
