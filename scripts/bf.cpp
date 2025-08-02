@@ -26,28 +26,22 @@ void interpretBF(const std::vector<char> &bf_code)
     check_bounds(ptr);
     char instruction = bf_code[code_ptr];
 
-    switch (instruction)
-    {
-    case '+':
+    if (instruction == '+')
       array[ptr]++;
-      break;
-    case '-':
+    else if (instruction == '-')
       array[ptr]--;
-      break;
-    case '<':
-      if (ptr > 0)
-        ptr--;
-      break;
-    case '>':
+    else if (instruction == '<')
+    {
+      if (ptr > 0) ptr--;
+    }
+    else if (instruction == '>')
       ptr++;
-      break;
-    case ',':
+    else if (instruction == ',')
       array[ptr] = std::cin.get();
-      break;
-    case '.':
+    else if (instruction == '.')
       std::cout << static_cast<char>(array[ptr]) << std::flush;
-      break;
-    case '[':
+    else if (instruction == '[')
+    {
       if (array[ptr] == 0)
       {
         int balance = 1;
@@ -58,25 +52,21 @@ void interpretBF(const std::vector<char> &bf_code)
             balance++;
           else if (bf_code[code_ptr] == ']')
             balance--;
-
           code_ptr++;
         }
         code_ptr--;
       }
       else
         loop_stack.push(code_ptr);
-
-      break;
-    case ']':
+    }
+    else if (instruction == ']')
+    {
       if (array[ptr] != 0)
         code_ptr = loop_stack.top();
       else
         loop_stack.pop();
-
-      break;
-    default:
-      break;
     }
+
     code_ptr++;
   }
 }

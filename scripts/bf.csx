@@ -14,7 +14,6 @@ void CheckBounds(int ptr, byte[] array)
 {
   if (ptr < 0 || ptr >= array.Length)
     throw new MemoryOutOfBoundsException();
-
 }
 
 Dictionary<int, int> FindMatchingBrackets(string code)
@@ -23,8 +22,8 @@ Dictionary<int, int> FindMatchingBrackets(string code)
   var stack = new Stack<int>();
 
   for (int i = 0; i < code.Length; i++)
-  {
-    if (code[i] == '[') stack.Push(i);
+    if (code[i] == '[')
+      stack.Push(i);
     else if (code[i] == ']')
     {
       if (stack.Count == 0)
@@ -34,7 +33,6 @@ Dictionary<int, int> FindMatchingBrackets(string code)
       brackets[openPos] = i;
       brackets[i] = openPos;
     }
-  }
 
   if (stack.Count > 0)
     throw new UnmatchedBracketException();
@@ -52,40 +50,30 @@ void InterpretBF(string code)
   while (codePtr < code.Length)
   {
     CheckBounds(ptr, array);
+    char instruction = code[codePtr];
 
-    switch (code[codePtr])
+    if (instruction == '+')
+      array[ptr]++;
+    else if (instruction == '-')
+      array[ptr]--;
+    else if (instruction == '<')
+      ptr = Math.Max(0, ptr - 1);
+    else if (instruction == '>')
+      ptr++;
+    else if (instruction == ',')
     {
-      case '+':
-        array[ptr]++;
-        break;
-      case '-':
-        array[ptr]--;
-        break;
-      case '<':
-        ptr = Math.Max(0, ptr - 1);
-        break;
-      case '>':
-        ptr++;
-        break;
-      case ',':
-        int input = Console.Read();
-        array[ptr] = input == -1 ? (byte)0 : (byte)input;
-        break;
-      case '.':
-        Console.Write((char)array[ptr]);
-        break;
-      case '[':
-        if (array[ptr] == 0)
-        {
-          codePtr = brackets[codePtr];
-        }
-        break;
-      case ']':
-        if (array[ptr] != 0)
-        {
-          codePtr = brackets[codePtr];
-        }
-        break;
+      int input = Console.Read();
+      array[ptr] = input == -1 ? (byte)0 : (byte)input;
+    }
+    else if (instruction == '.')
+      Console.Write((char)array[ptr]);
+    else if (instruction == '[')
+    {
+      if (array[ptr] == 0) codePtr = brackets[codePtr];
+    }
+    else if (instruction == ']')
+    {
+      if (array[ptr] != 0) codePtr = brackets[codePtr];
     }
 
     codePtr++;
@@ -106,16 +94,6 @@ try
 catch (FileNotFoundException)
 {
   Console.Error.WriteLine($"Error: Could not open file '{Args[0]}'");
-  Environment.Exit(1);
-}
-catch (MemoryOutOfBoundsException e)
-{
-  Console.Error.WriteLine($"Error: {e.Message}");
-  Environment.Exit(1);
-}
-catch (UnmatchedBracketException e)
-{
-  Console.Error.WriteLine($"Error: {e.Message}");
   Environment.Exit(1);
 }
 catch (Exception e)
