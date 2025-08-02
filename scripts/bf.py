@@ -15,8 +15,8 @@ def check_bounds(ptr: int, array: list[int]):
 
 
 def find_matching_brackets(code: str) -> dict[int, int]:
-    brackets = {}
-    stack = []
+    brackets: dict[int, int] = {}
+    stack: list[int] = []
     for i, char in enumerate(code):
         if char == "[":
             stack.append(i)

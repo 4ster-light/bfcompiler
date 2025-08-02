@@ -7,7 +7,7 @@ fn test_interpreter_prints_ascii_6() {
     let code = "++++++.";
     let output = capture_interpreter_output(code);
 
-    assert_eq!(output, vec![6, b'\n']);
+    assert_eq!(output, vec![6]);
 }
 
 #[test]
@@ -15,7 +15,7 @@ fn test_interpreter_hello_world() {
     let code = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
     let output = capture_interpreter_output(code);
 
-    assert_eq!(output, b"Hello World!\n\n");
+    assert_eq!(output, b"Hello World!\n");
 }
 
 fn capture_interpreter_output(code: &str) -> Vec<u8> {

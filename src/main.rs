@@ -9,7 +9,7 @@ use std::path::PathBuf;
     name = "bfcompiler",
     about = "A Brainfuck interpreter and compiler",
     version = "0.1.0",
-    long_about = "bfcompiler is a tool to interpret or compile Brainfuck code. Use subcommands to run a Brainfuck program, compile it to Rust, or start an interactive REPL."
+    long_about = "BFCompiler is a tool to interpret, compile Brainfuck code, or start a brainfuck repl."
 )]
 struct Cli {
     #[command(subcommand)]

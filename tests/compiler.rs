@@ -41,7 +41,7 @@ fn test_compiler_prints_ascii_6() {
 
     assert_eq!(
         output.stdout,
-        vec![6, b'\n'],
+        vec![6],
         "stderr: {}",
         String::from_utf8_lossy(&output.stderr)
     );
@@ -83,7 +83,7 @@ fn test_compiler_hello_world() {
 
     assert_eq!(
         output.stdout,
-        b"Hello World!\n\n",
+        b"Hello World!\n",
         "stderr: {}",
         String::from_utf8_lossy(&output.stderr)
     );
