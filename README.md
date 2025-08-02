@@ -3,7 +3,7 @@
 This a simple implementation of a Brainfuck compiler in Rust, has several modes
 of operation, and can be used as a REPL.
 
-You need to have Rust installed, which is usually done via curl to get Rust up
+You need to have Rust installed, which is usually done via curl to get _rustup_
 (further instructions in the Rust home page), or at least rustc rust compiler
 with the std lib.
 
@@ -59,8 +59,9 @@ And then you can enter your Brainfuck code, and it will be executed.
 
 ### Help
 
-If no command is given or if you use the `--help` flag it'll display the due help message
-and if the same flag is used in any of the commands it'll show relevant information too.
+If no command is given or if you use the `--help` flag it'll display the due
+help message and if the same flag is used in any of the commands it'll show
+relevant information too.
 
 ## Example
 

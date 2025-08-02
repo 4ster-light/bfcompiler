@@ -7,7 +7,7 @@ enum InterpreterError: Error {
 
 let maxProgSize = 30000
 
-func checkBounds(ptr: Int, array: [Int]) throws {
+func checkBounds(_ ptr: Int, _ array: [Int]) throws {
     if ptr < 0 || ptr >= array.count {
         throw InterpreterError.memoryOutOfBounds
     }
@@ -47,7 +47,7 @@ func interpretBF(_ code: String) throws {
     var codePtr = code.startIndex
 
     while codePtr < code.endIndex {
-        try checkBounds(ptr: ptr, array: array)
+        try checkBounds(ptr, array)
 
         switch code[codePtr] {
         case "+":
