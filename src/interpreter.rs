@@ -16,7 +16,7 @@ pub fn interpret_bf(bf_code: &str) -> anyhow::Result<()> {
 
         match bf_code.chars().nth(code_ptr).unwrap() {
             '>' => ptr += 1,
-            '<' => ptr = ptr.checked_sub(1).ok_or_else(|| Error::BoundsError(ptr))?,
+            '<' => ptr = ptr.checked_sub(1).ok_or(Error::BoundsError(ptr))?,
             '+' => array[ptr] = array[ptr].wrapping_add(1),
             '-' => array[ptr] = array[ptr].wrapping_sub(1),
             '.' => print!("{}", array[ptr] as char),

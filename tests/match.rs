@@ -1,5 +1,5 @@
-use bfcompiler::error::Error;
-use bfcompiler::interpreter::interpret_bf;
+use bf::error::Error;
+use bf::interpreter::interpret_bf;
 
 #[test]
 fn test_mismatched_brackets() {

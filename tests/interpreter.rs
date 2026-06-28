@@ -25,7 +25,7 @@ fn capture_interpreter_output(code: &str) -> Vec<u8> {
     fs::write(&path, code).unwrap();
 
     let output = Command::new("cargo")
-        .args(&["run", "--quiet", "--", "run", path.to_str().unwrap()])
+        .args(["run", "--quiet", "--", "run", path.to_str().unwrap()])
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .output()

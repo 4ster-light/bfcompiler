@@ -1,14 +1,12 @@
-use bfcompiler::{
-    compiler::build_bf, interpreter::interpret_bf, repl::repl_bf, utils::read_bf_file,
-};
+use bf::{compiler::build_bf, interpreter::interpret_bf, repl::repl_bf, utils::read_bf_file};
 use clap::{Parser, Subcommand};
 use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(
-    name = "bfcompiler",
+    name = "bf",
     about = "A Brainfuck interpreter and compiler",
-    version = "0.1.0",
+    version = "1.0.0",
     long_about = "BFCompiler is a tool to interpret, compile Brainfuck code, or start a brainfuck repl."
 )]
 struct Cli {

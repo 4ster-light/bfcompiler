@@ -1,5 +1,5 @@
-use bfcompiler::error::Error;
-use bfcompiler::utils::read_bf_file;
+use bf::error::Error;
+use bf::utils::read_bf_file;
 use std::fs;
 use tempfile::TempDir;
 

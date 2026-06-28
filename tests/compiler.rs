@@ -1,4 +1,4 @@
-use bfcompiler::compiler::build_bf;
+use bf::compiler::build_bf;
 use std::fs;
 use std::process::Command;
 use std::thread::sleep;

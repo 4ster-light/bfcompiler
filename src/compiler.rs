@@ -66,7 +66,7 @@ fn compile_bf(bf_code: &str) -> anyhow::Result<String> {
             }
             ']' => {
                 if bracket_count > 0 {
-                    output.push_str("}");
+                    output.push('}');
                     bracket_count -= 1;
                 } else {
                     return Err(Error::MismatchedBrackets(i).into());
