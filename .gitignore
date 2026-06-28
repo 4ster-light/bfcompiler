@@ -1,4 +1,4 @@
 /target
-output
-output.rs
-.vscode
+hello
+hello.rs
+result
