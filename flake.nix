@@ -6,37 +6,71 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
+        manifest = (pkgs.lib.importTOML ./Cargo.toml).package;
         appDescription = "A Brainfuck compiler toolchain written in Rust.";
+
         bf = pkgs.rustPlatform.buildRustPackage {
-          pname = "bf";
-          version = "1.0.0";
-          src = builtins.path { path = ./.; };
-          cargoLock = { lockFile = ./Cargo.lock; };
+          pname = manifest.name;
+          version = manifest.version;
+
+          src = pkgs.lib.cleanSource ./.;
+          cargoLock.lockFile = ./Cargo.lock;
+
           doCheck = false;
+
           meta = with pkgs.lib; {
             description = appDescription;
             homepage = "https://github.com/4ster-light/bfcompiler";
             license = licenses.mit;
-            mainProgram = "bf";
+            mainProgram = manifest.name;
           };
         };
       in
       {
-        packages.default = bf;
-        packages.bf = bf;
+        packages = {
+          inherit bf;
+          default = bf;
+        };
+
+        checks = {
+          package = bf;
+
+          smoke =
+            pkgs.runCommand "bf-smoke"
+              {
+                nativeBuildInputs = [ bf ];
+              }
+              ''
+                ${pkgs.lib.getExe bf} --version
+                mkdir -p $out
+              '';
+        };
 
         apps.default = {
           type = "app";
-          program = "${bf}/bin/bf";
-          description = appDescription;
+          program = pkgs.lib.getExe bf;
+          meta.description = appDescription;
         };
 
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ cargo rustc rustfmt clippy ];
+          inputsFrom = [ bf ];
+          packages = with pkgs; [
+            cargo
+            rustc
+            rustfmt
+            clippy
+            git
+          ];
         };
       }
     );
