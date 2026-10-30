@@ -285,27 +285,27 @@
 
           shellHook = ''
             cat <<'EOF'
-                        BFCompiler development environment
+            BFCompiler development environment
 
-                        Format:
-                          cargo fmt --all
-                          nix fmt
-                          cd web && pnpm fmt
+              Format:
+                cargo fmt --all
+                nix fmt
+                cd web && pnpm fmt
 
-                        Check:
-                          cargo clippy --workspace --all-targets -- -D warnings
-                          cargo test --workspace
-                          nix flake check
+              Check:
+                cargo clippy --workspace --all-targets -- -D warnings
+                cargo test --workspace
+                nix flake check
 
-                        Web playground:
-                          cd web
-                          pnpm install
-                          pnpm run          # discover scripts
+              Web playground:
+                cd web
+                pnpm install
+                pnpm run          # discover scripts
 
-                        Nix:
-                          nix build .#web
-                          nix run .#web     # serve the built bundle on :4173
-                      EOF'';
+              Nix:
+                nix build .#web
+                nix run .#web     # serve the built bundle on :4173
+            EOF'';
         };
       }
     );
