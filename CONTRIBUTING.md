@@ -6,29 +6,48 @@
 nix develop
 ```
 
+The shell includes the rust-overlay stable toolchain with Clippy, rustfmt, and the Wasm target, plus pnpm 12, Node.js 26, `wasm-pack`, `wasm-bindgen-cli`, `lld`, nixfmt, and Biome.
+
 ## Verify Changes
+
+Rust:
+
+```bash
+cargo fmt --all --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+```
+
+Web playground:
+
+```bash
+cd web
+pnpm install --frozen-lockfile
+pnpm test:ui:install  # first run only; Playwright Chromium
+pnpm test
+pnpm wasm && pnpm build
+pnpm fmt
+pnpm lint
+```
+
+Nix:
 
 ```bash
 nix flake check
-nix build
+nix build .#bf .#web
+nix run .#web  # serves the built bundle on http://localhost:4173
+nix fmt        # nixfmt
 ```
 
-Note: `nix build` only sees files that are included in the flake source, so new
-workspace files must be tracked before it can see them.
+The checks are `bf`, `web`, `rustfmt`, `clippy`, `tests`, `nixfmt`, `web-format`, and `smoke`.
 
-If you are already in the dev shell, these are also useful:
-
-```bash
-cargo check
-cargo test
-cargo fmt --all --check
-cargo clippy --all-targets -- -D warnings
-```
+`nix build` only sees files tracked by Git, so run `git add` after adding new crates or web files. For a quick check before staging, `nix build path:.#web` includes untracked files.
 
 ## What To Keep In Mind
 
 - Keep changes focused.
-- Update docs when behavior or structure changes.
+- Update docs when behavior, dependencies, or structure changes.
+- Use pnpm for the web workspace; keep `pnpm-lock.yaml` up to date.
 - Prefer the Nix flake for local development and validation.
 - Mention any extra commands needed to verify your change.
 
