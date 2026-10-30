@@ -1,8 +1,9 @@
-use crate::interpreter::interpret_bf;
+use anyhow::Result;
+use bf_interpreter::{execute, DEFAULT_STEP_LIMIT};
 use colored::Colorize;
 use std::io::{self, Write};
 
-pub fn repl_bf() -> anyhow::Result<()> {
+pub fn repl_bf() -> Result<()> {
     println!("{}", "Brainfuck REPL. Type 'exit' to quit.".blue().bold());
     loop {
         let mut input = String::new();
@@ -14,7 +15,13 @@ pub fn repl_bf() -> anyhow::Result<()> {
             break;
         }
         if !input.is_empty() {
-            interpret_bf(input)?;
+            match execute(input, &[], DEFAULT_STEP_LIMIT) {
+                Ok(execution) => {
+                    io::stdout().write_all(&execution.output)?;
+                    println!();
+                }
+                Err(error) => eprintln!("{} {error}", "Error:".red().bold()),
+            }
         }
     }
     Ok(())

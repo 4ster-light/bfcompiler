@@ -1,24 +1,13 @@
-use bf::error::Error;
-use bf::interpreter::interpret_bf;
+use bf_interpreter::{execute, Error, DEFAULT_STEP_LIMIT};
 
 #[test]
 fn test_mismatched_brackets() {
-    let code = "+++[+++";
-    let result = interpret_bf(code);
-
-    assert!(matches!(
-        result.unwrap_err().downcast_ref::<Error>(),
-        Some(Error::MismatchedBrackets(_))
-    ));
+    let result = execute("+++[+++", &[], DEFAULT_STEP_LIMIT);
+    assert!(matches!(result, Err(Error::MismatchedBrackets(_))));
 }
 
 #[test]
 fn test_bounds_error() {
-    let code = "<";
-    let result = interpret_bf(code);
-
-    assert!(matches!(
-        result.unwrap_err().downcast_ref::<Error>(),
-        Some(Error::BoundsError(_))
-    ));
+    let result = execute("<", &[], DEFAULT_STEP_LIMIT);
+    assert!(matches!(result, Err(Error::BoundsError(_))));
 }

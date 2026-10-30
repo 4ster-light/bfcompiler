@@ -1,0 +1,12 @@
+[package]
+name = "bf-compiler"
+description = "Brainfuck to native executable compiler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+colored = "3.0.0"
+thiserror.workspace = true
+bf-interpreter.workspace = true

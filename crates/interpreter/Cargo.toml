@@ -1,0 +1,9 @@
+[package]
+name = "bf-interpreter"
+description = "A portable, step-limited Brainfuck interpreter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true

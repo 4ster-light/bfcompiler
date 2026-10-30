@@ -1,0 +1,11 @@
+[package]
+name = "bf-repl"
+description = "Interactive terminal REPL for Brainfuck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+colored = "3.0.0"
+bf-interpreter.workspace = true

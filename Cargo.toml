@@ -1,11 +1,31 @@
-[package]
-name = "bf"
+[workspace]
+members = [".", "crates/compiler", "crates/interpreter", "crates/repl", "crates/web"]
+resolver = "2"
+
+[workspace.package]
 version = "1.0.0"
 edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+anyhow = "1.0.98"
+thiserror = "2.0.12"
+bf-compiler = { path = "crates/compiler" }
+bf-interpreter = { path = "crates/interpreter" }
+bf-repl = { path = "crates/repl" }
+
+[package]
+name = "bf"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
 
 [dependencies]
-anyhow = "1.0.98"
+anyhow.workspace = true
+bf-compiler.workspace = true
+bf-interpreter.workspace = true
+bf-repl.workspace = true
 clap = { version = "4.5.36", features = ["derive"] }
 colored = "3.0.0"
-thiserror = "2.0.12"
+thiserror.workspace = true
 tempfile = "3.19.1"
