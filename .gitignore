@@ -2,3 +2,9 @@
 hello
 hello.rs
 result
+/web/dist
+/web/node_modules
+/web/src/wasm
+/web/test-results
+/web/playwright-report
+*.local

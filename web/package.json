@@ -1,0 +1,26 @@
+{
+	"name": "bf-playground",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"wasm": "wasm-pack build ../crates/web --target web --out-dir ../../web/src/wasm --out-name bf_web",
+		"predev": "pnpm run wasm",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "playwright test",
+		"fmt": "biome format --write .",
+		"lint": "biome check --fix ."
+	},
+	"devDependencies": {
+		"@axe-core/playwright": "^4.14.0",
+		"@biomejs/biome": "2.5.15",
+		"@playwright/test": "^1.64.1",
+		"typescript": "^5.9.3",
+		"vite": "^7.3.7"
+	},
+	"dependencies": {
+		"@types/node": "^26.6.6"
+	}
+}

@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="theme-color" content="#101713">
+		<meta
+			name="description"
+			content="A small Brainfuck interpreter playground. Runs locally in your browser."
+		>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+		<script>
+		// Apply the saved theme before paint. Dark is the default, including for first visits.
+		;(() => {
+			try {
+				if (localStorage.getItem("bf-theme") === "light") {
+					document.documentElement.dataset.theme = "light"
+					document
+						.querySelector('meta[name="theme-color"]')
+						?.setAttribute("content", "#f5f4ee")
+				}
+			} catch {
+				// Storage can be unavailable in private or restricted contexts.
+			}
+		})()
+		</script>
+		<title>Brainfuck playground · BFCompiler</title>
+	</head>
+	<body>
+		<a class="skip-link" href="#playground">Skip to playground</a>
+		<header class="site-header">
+			<a class="brand" href="/" aria-label="BFCompiler home">
+				<span class="brand-mark" aria-hidden="true">bf</span>
+				<span class="brand-name">BFCompiler</span>
+			</a>
+			<nav aria-label="Main navigation">
+				<a class="nav-link active" href="#playground" aria-current="page"
+					>Playground</a
+				>
+				<a class="nav-link" href="#guide">Language guide</a>
+				<a
+					class="nav-link github-link"
+					href="https://github.com/4ster-light/bfcompiler"
+					target="_blank"
+					rel="noreferrer"
+				>
+					GitHub <span aria-hidden="true">↗</span
+					><span class="sr-only"> (opens in a new tab)</span>
+				</a>
+				<button
+					class="theme-toggle"
+					id="theme-toggle"
+					type="button"
+					aria-label="Switch to light theme"
+					title="Switch to light theme"
+				>
+					<svg
+						class="theme-icon theme-icon-sun"
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+					>
+						<circle cx="12" cy="12" r="4" />
+						<path
+							d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+						/>
+					</svg>
+					<svg
+						class="theme-icon theme-icon-moon"
+						aria-hidden="true"
+						viewBox="0 0 24 24"
+					>
+						<path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z" />
+					</svg>
+					<span class="theme-label" id="theme-label">Light</span>
+				</button>
+			</nav>
+		</header>
+
+		<main>
+			<section class="intro" aria-labelledby="page-title">
+				<div>
+					<p class="eyebrow">
+						<span aria-hidden="true">✳</span>
+						BRAINFUCK IN THE BROWSER
+					</p>
+					<h1 id="page-title">
+						A small playground<br><span>for Brainfuck.</span>
+					</h1>
+					<p class="intro-copy">
+						<a
+							href="https://esolangs.org/wiki/Brainfuck"
+							target="_blank"
+							rel="noreferrer"
+							>Brainfuck</a
+						>
+						is a minimal esoteric language created by Urban Müller in 1993.<br
+							class="desktop-break"
+						>
+						This page runs a Rust interpreter compiled to WebAssembly. The
+						current program stays in this tab.
+					</p>
+				</div>
+				<div class="local-note">
+					<span class="local-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24">
+							<path
+								d="M12 3 4.5 6v5.2c0 4.6 3.1 8.1 7.5 9.8 4.4-1.7 7.5-5.2 7.5-9.8V6L12 3Z"
+							/>
+							<path d="m8.7 12 2.1 2.1 4.7-4.8" />
+						</svg>
+					</span>
+					<div>
+						<strong>Runs locally</strong><span>No account and no uploads</span>
+					</div>
+				</div>
+			</section>
+
+			<section
+				class="playground"
+				id="playground"
+				aria-label="Brainfuck playground"
+			>
+				<div class="workspace-toolbar">
+					<div class="example-picker">
+						<label for="example">EXAMPLE PROGRAM</label>
+						<div class="select-wrap">
+							<select id="example" aria-label="Example program">
+								<option value="hello">Hello, world!</option>
+								<option value="echo">Echo your input</option>
+								<option value="alphabet">The alphabet</option>
+								<option value="blank">Empty program</option>
+							</select>
+						</div>
+					</div>
+					<div class="run-actions">
+						<span class="keyboard-hint"
+							><kbd>Ctrl</kbd><span>+</span><kbd>↵</kbd>
+							to run</span
+						>
+						<button
+							class="button button-quiet"
+							id="reset"
+							type="button"
+							title="Reset program output and memory"
+						>
+							<svg aria-hidden="true" viewBox="0 0 24 24">
+								<path d="M4 4v6h6M5.5 15a7 7 0 1 0 .4-7.8L4 10" />
+							</svg>
+							Reset
+						</button>
+						<button
+							class="button button-secondary"
+							id="step"
+							type="button"
+							title="Execute one instruction (Ctrl+Shift+Enter)"
+						>
+							<svg aria-hidden="true" viewBox="0 0 24 24">
+								<path d="m7 5 8 7-8 7V5ZM18 5v14" />
+							</svg>
+							Step
+						</button>
+						<button class="button button-primary" id="run" type="button">
+							<svg aria-hidden="true" viewBox="0 0 24 24">
+								<path class="run-icon" d="m8 5 11 7-11 7V5Z" />
+							</svg>
+							<span>Run program</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="workspace-grid">
+					<section class="panel editor-panel" aria-labelledby="editor-title">
+						<div class="panel-heading editor-heading">
+							<div class="file-tab">
+								<span class="file-icon" aria-hidden="true">#</span>
+								<h2 id="editor-title">main.bf</h2>
+								<span class="unsaved-dot" aria-hidden="true"></span>
+							</div>
+							<button
+								class="icon-button"
+								id="save"
+								type="button"
+								aria-label="Download program as a .bf file"
+								title="Download .bf file"
+							>
+								<svg aria-hidden="true" viewBox="0 0 24 24">
+									<path d="M12 3v12m-5-5 5 5 5-5M5 20h14" />
+								</svg>
+							</button>
+						</div>
+						<div class="editor-shell">
+							<pre
+								class="line-numbers"
+								id="line-numbers"
+								aria-hidden="true"
+							>1</pre>
+							<textarea
+								id="code"
+								aria-label="Brainfuck source code"
+								aria-describedby="editor-help"
+								spellcheck="false"
+								autocapitalize="off"
+								autocomplete="off"
+								wrap="off"
+							></textarea>
+						</div>
+						<div class="editor-meta">
+							<span id="cursor-position">Ln 1, Col 1</span>
+							<span><span id="instruction-count">0</span> instructions</span>
+						</div>
+						<div class="insert-bar">
+							<span id="editor-help">Insert a command</span>
+							<div
+								class="command-buttons"
+								aria-label="Insert Brainfuck commands"
+							>
+								<button
+									type="button"
+									data-command=">"
+									aria-label="Insert move right command"
+									title="Move right"
+								>
+									›
+								</button>
+								<button
+									type="button"
+									data-command="<"
+									aria-label="Insert move left command"
+									title="Move left"
+								>
+									‹
+								</button>
+								<button
+									type="button"
+									data-command="+"
+									aria-label="Insert increment command"
+									title="Increment cell"
+								>
+									+
+								</button>
+								<button
+									type="button"
+									data-command="-"
+									aria-label="Insert decrement command"
+									title="Decrement cell"
+								>
+									−
+								</button>
+								<button
+									type="button"
+									data-command="."
+									aria-label="Insert output command"
+									title="Output current cell"
+								>
+									.
+								</button>
+								<button
+									type="button"
+									data-command=","
+									aria-label="Insert input command"
+									title="Read one byte"
+								>
+									,
+								</button>
+								<button
+									type="button"
+									data-command="["
+									aria-label="Insert loop start command"
+									title="Loop start"
+								>
+									[
+								</button>
+								<button
+									type="button"
+									data-command="]"
+									aria-label="Insert loop end command"
+									title="Loop end"
+								>
+									]
+								</button>
+							</div>
+						</div>
+					</section>
+
+					<section class="panel output-panel" aria-labelledby="output-title">
+						<div class="panel-heading output-heading">
+							<div class="output-title-wrap">
+								<h2 id="output-title">Output</h2>
+								<span class="status-badge" id="status-badge"
+									><span></span><span id="status-label">Ready</span></span
+								>
+							</div>
+							<div class="output-actions">
+								<button
+									class="icon-button"
+									id="copy"
+									type="button"
+									aria-label="Copy output"
+									title="Copy output"
+									disabled
+								>
+									<svg aria-hidden="true" viewBox="0 0 24 24">
+										<rect x="8" y="8" width="12" height="12" rx="2" />
+										<path
+											d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"
+										/>
+									</svg>
+								</button>
+								<button
+									class="icon-button"
+									id="download"
+									type="button"
+									aria-label="Download output"
+									title="Download output"
+									disabled
+								>
+									<svg aria-hidden="true" viewBox="0 0 24 24">
+										<path d="M12 3v12m-5-5 5 5 5-5M5 20h14" />
+									</svg>
+								</button>
+							</div>
+						</div>
+						<pre
+							class="output"
+							id="output"
+							tabindex="0"
+							aria-label="Program output"
+						><span class="output-placeholder">Program output will appear here.<br />Choose <strong>Run program</strong> to execute the current code.</span></pre>
+						<div class="input-section">
+							<div class="input-label-row">
+								<label for="input">Program input <span>OPTIONAL</span></label
+								><span id="input-count">0 bytes</span>
+							</div>
+							<textarea
+								id="input"
+								rows="2"
+								placeholder="Text for your program to read…"
+								aria-describedby="input-help"
+							></textarea>
+							<p id="input-help">
+								Read by the <code>,</code> command. At end of input, it reads
+								<code>0</code>.
+							</p>
+						</div>
+						<div class="execution-meta">
+							<span id="step-count">0 instructions executed</span
+							><span id="elapsed">0 ms</span>
+						</div>
+					</section>
+				</div>
+
+				<section class="memory-panel" aria-labelledby="memory-title">
+					<div class="memory-heading">
+						<div>
+							<h2 id="memory-title">
+								Memory tape <span class="beta-label">TAPE STATE</span>
+							</h2>
+							<p>
+								Each cell holds one byte, from 0 to 255. The highlighted cell is
+								where the pointer is.
+							</p>
+						</div>
+						<div class="memory-tools">
+							<span class="pointer-label"
+								>Pointer at <strong id="pointer-cell">cell 0</strong></span
+							><button
+								class="icon-button"
+								id="memory-previous"
+								type="button"
+								aria-label="Show previous 16 memory cells"
+								title="Previous cells"
+							>
+								<svg aria-hidden="true" viewBox="0 0 24 24">
+									<path d="m15 5-7 7 7 7" />
+								</svg>
+							</button><button
+								class="icon-button"
+								id="memory-next"
+								type="button"
+								aria-label="Show next 16 memory cells"
+								title="Next cells"
+							>
+								<svg aria-hidden="true" viewBox="0 0 24 24">
+									<path d="m9 5 7 7-7 7" />
+								</svg>
+							</button>
+						</div>
+					</div>
+					<div
+						class="memory-tape"
+						id="memory-tape"
+						role="list"
+						aria-label="Memory cells"
+						tabindex="0"
+					></div>
+					<div class="memory-footer">
+						<span><i aria-hidden="true"></i> Current pointer</span
+						><button type="button" class="text-button" id="jump-pointer">
+							Jump to pointer <span aria-hidden="true">↗</span>
+						</button><span class="memory-capacity"
+							>30,000 cells · 8-bit wrapping</span
+						>
+					</div>
+				</section>
+				<p class="workspace-note">
+					<svg aria-hidden="true" viewBox="0 0 24 24">
+						<circle cx="12" cy="12" r="9" />
+						<path d="M12 11v6M12 7h.01" />
+					</svg>
+					Long-running programs pause after 10 million instructions so the page
+					stays responsive. Press Escape to pause a running program.
+				</p>
+			</section>
+
+			<section class="guide" id="guide" aria-labelledby="guide-title">
+				<div class="guide-intro">
+					<p class="eyebrow">THE LANGUAGE</p>
+					<h2 id="guide-title">Eight commands<br>and a tape.</h2>
+					<p>
+						Brainfuck was created by Urban Müller in 1993. A program moves a
+						pointer along a tape of byte cells and uses these eight commands.
+					</p>
+					<p class="credit">
+						Read more at
+						<a
+							href="https://esolangs.org/wiki/Brainfuck"
+							target="_blank"
+							rel="noreferrer"
+							>Esolangs <span aria-hidden="true">↗</span
+							><span class="sr-only"> (opens in a new tab)</span></a
+						>.
+					</p>
+					<div class="guide-tip">
+						<span aria-hidden="true">•</span>
+						<p>
+							<strong>To try it</strong><code>+++++.</code>
+							prints one byte. You can also choose the alphabet example and use
+							Step to advance one instruction at a time.
+						</p>
+					</div>
+				</div>
+				<div class="command-guide">
+					<div class="guide-row">
+						<code>&gt;</code>
+						<div>
+							<strong>Move right</strong
+							><span>Move the pointer to the next cell.</span>
+						</div>
+						<kbd>pointer →</kbd>
+					</div>
+					<div class="guide-row">
+						<code>&lt;</code>
+						<div>
+							<strong>Move left</strong
+							><span>Move the pointer to the previous cell.</span>
+						</div>
+						<kbd>← pointer</kbd>
+					</div>
+					<div class="guide-row">
+						<code>+</code>
+						<div>
+							<strong>Increment</strong
+							><span>Add one to the current cell.</span>
+						</div>
+						<kbd>cell + 1</kbd>
+					</div>
+					<div class="guide-row">
+						<code>-</code>
+						<div>
+							<strong>Decrement</strong
+							><span>Subtract one from the current cell.</span>
+						</div>
+						<kbd>cell − 1</kbd>
+					</div>
+					<div class="guide-row">
+						<code>.</code>
+						<div>
+							<strong>Output</strong
+							><span>Write the current cell as a byte.</span>
+						</div>
+						<kbd>write</kbd>
+					</div>
+					<div class="guide-row">
+						<code>,</code>
+						<div>
+							<strong>Input</strong
+							><span>Read one byte into the current cell.</span>
+						</div>
+						<kbd>read</kbd>
+					</div>
+					<div class="guide-row">
+						<code>[</code>
+						<div>
+							<strong>Loop start</strong
+							><span
+								>Jump past <code>]</code> if the current cell is zero.</span
+							>
+						</div>
+						<kbd>if 0, jump</kbd>
+					</div>
+					<div class="guide-row">
+						<code>]</code>
+						<div>
+							<strong>Loop end</strong
+							><span
+								>Jump back to <code>[</code> if the current cell is not
+								zero.</span
+							>
+						</div>
+						<kbd>if ≠ 0, jump</kbd>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<footer>
+			<a class="brand footer-brand" href="/"
+				><span class="brand-mark" aria-hidden="true">bf</span
+				><span class="brand-name">BFCompiler</span></a
+			>
+			<p>A small Brainfuck playground.</p>
+			<span
+				>Brainfuck by Urban Müller, 1993 <span aria-hidden="true">·</span> Rust
+				+ WebAssembly</span
+			>
+		</footer>
+		<div class="toast" id="toast" role="status" aria-live="polite"></div>
+		<div
+			class="sr-only"
+			id="announcer"
+			aria-live="polite"
+			aria-atomic="true"
+		></div>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
+</html>
