@@ -1,8 +1,27 @@
-# BFCompiler
+# [BFCompiler](https://bfcompiler.pages.dev)
+
+[![Version](https://img.shields.io/badge/version-1.0.0-2f6f4e?style=flat-square)](Cargo.toml)
+[![Rust](https://img.shields.io/badge/rust-1.99.1-dea584?logo=rust&logoColor=white&style=flat-square)](https://www.rust-lang.org)
+[![Nix flake](https://img.shields.io/badge/Nix-flake-5277C3?logo=nixos&logoColor=white&style=flat-square)](flake.nix)
+[![WebAssembly](https://img.shields.io/badge/WebAssembly-Wasm-654FF0?logo=webassembly&logoColor=white&style=flat-square)](crates/web)
+[![Website](https://img.shields.io/badge/website-bfcompiler.pages.dev-1f7a5a?logo=cloudflare&logoColor=white&style=flat-square)](https://bfcompiler.pages.dev)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Web tests](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml)
+[![Deploy](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml)
 
 A small Brainfuck toolchain written in Rust: a command-line interpreter, a compiler, a terminal REPL, and a browser playground built with WebAssembly.
 
-[Brainfuck](https://esolangs.org/wiki/Brainfuck) was created by Urban Müller in 1993.
+> [Brainfuck](https://esolangs.org/wiki/Brainfuck) was created by Urban Müller in 1993.
+
+## Table of Contents
+
+- [Workspace](#workspace)
+- [Quick start with Nix](#quick-start-with-nix)
+  - [How the web dependencies are handled](#how-the-web-dependencies-are-handled)
+- [CLI usage](#cli-usage)
+- [Web playground](#web-playground)
+- [Development checks](#development-checks)
+- [License](#license)
 
 ## Workspace
 
@@ -69,12 +88,12 @@ The flake uses the standard Nixpkgs pnpm path:
 
 Other reasonable workflows, depending on what you need:
 
-| Workflow | Command | Trade-off |
-| --- | --- | --- |
-| Hermetic Nix build | `nix build .#web` | Reproducible, but needs a hash update when pnpm deps change |
-| Fast UI iteration | `nix develop`, then `pnpm dev` | No Nix rebuild; uses the normal pnpm store |
+| Workflow              | Command                                                     | Trade-off                                                       |
+|-----------------------|-------------------------------------------------------------|-----------------------------------------------------------------|
+| Hermetic Nix build    | `nix build .#web`                                           | Reproducible, but needs a hash update when pnpm deps change     |
+| Fast UI iteration     | `nix develop`, then `pnpm dev`                              | No Nix rebuild; uses the normal pnpm store                      |
 | CI / Cloudflare Pages | `pnpm install --frozen-lockfile && pnpm wasm && pnpm build` | No Nix required; depends on the CI-provided Rust/Wasm toolchain |
-| Plain static output | `pnpm wasm && pnpm build` | Produces `web/dist`; serve it with any static file server |
+| Plain static output   | `pnpm wasm && pnpm build`                                   | Produces `web/dist`; serve it with any static file server       |
 
 The flake deliberately does not vendor `node_modules`, run an impure network install during a Nix build, or use `buildNpmPackage` (which expects an npm lockfile).
 
@@ -102,30 +121,6 @@ cargo install --git https://github.com/4ster-light/bfcompiler.git
 ```
 
 ## Web playground
-
-The playground has example programs, program input, run/pause/step controls, a live memory tape, and output download/copy actions. It runs entirely in the browser and defaults to a dark theme; the header switch changes to light and remembers the choice.
-
-To develop without the Nix shell:
-
-```bash
-rustup target add wasm32-unknown-unknown
-cargo install wasm-pack
-
-cd web
-pnpm install
-pnpm dev
-```
-
-`pnpm dev` rebuilds the WebAssembly bindings through its `predev` hook. `pnpm build` only runs Vite, so use `pnpm wasm && pnpm build` for a complete production bundle. Other useful commands:
-
-```bash
-pnpm exec playwright install chromium  # first run only
-pnpm test             # Playwright UI tests
-pnpm check            # Biome formatting + lint checks
-pnpm fmt              # Biome formatting with fixes
-pnpm lint             # Biome checks with safe fixes
-pnpm wasm && pnpm build
-```
 
 See [`web/README.md`](web/README.md) for browser tests and Cloudflare Pages details. Pushes to `main` that touch the playground deploy to <https://bfcompiler.pages.dev> through `.github/workflows/pages.yml`.
 
