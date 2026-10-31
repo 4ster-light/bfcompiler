@@ -206,7 +206,7 @@
               runtimeInputs = [ pkgs.static-server ];
               text = ''
                 port="''${PORT:-4173}"
-                exec static-server -host 0.0.0.0 -port "$port" ${web}
+                static-server -host 0.0.0.0 -port "$port" ${web}
               '';
             }
           );
@@ -245,14 +245,14 @@
             touch "$out"
           '';
 
-          web-format =
-            pkgs.runCommand "web-format"
+          web-check =
+            pkgs.runCommand "web-check"
               {
                 nativeBuildInputs = [ pkgs.biome ];
               }
               ''
                 cd ${source}/web
-                biome check --formatter-enabled=true --linter-enabled=false --assist-enabled=false .
+                biome check .
                 touch "$out"
               '';
 
@@ -287,25 +287,27 @@
             cat <<'EOF'
             BFCompiler development environment
 
-              Format:
-                cargo fmt --all
-                nix fmt
-                cd web && pnpm fmt
+            Format:
+              cargo fmt --all
+              nix fmt
+              cd web && pnpm check
+              cd web && pnpm fmt
 
-              Check:
-                cargo clippy --workspace --all-targets -- -D warnings
-                cargo test --workspace
-                nix flake check
+            Check:
+              cargo clippy --workspace --all-targets -- -D warnings
+              cargo test --workspace
+              nix flake check
 
-              Web playground:
-                cd web
-                pnpm install
-                pnpm run          # discover scripts
+            Web playground:
+              cd web
+              pnpm install
+              pnpm run          # discover scripts
 
-              Nix:
-                nix build .#web
-                nix run .#web     # serve the built bundle on :4173
-            EOF'';
+            Nix:
+              nix build .#web
+              nix run .#web     # serve the built bundle on :4173
+            EOF
+          '';
         };
       }
     );
