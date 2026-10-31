@@ -276,6 +276,7 @@
           packages = [
             rustToolchain
             pkgs.nodejs_26
+            pkgs.wrangler
             pnpm
             pkgs.wasm-pack
             pkgs.wasm-bindgen-cli_0_2_129
