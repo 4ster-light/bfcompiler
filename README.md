@@ -6,6 +6,7 @@
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-Wasm-654FF0?logo=webassembly&logoColor=white&style=flat-square)](crates/web)
 [![Website](https://img.shields.io/badge/website-bfcompiler.pages.dev-1f7a5a?logo=cloudflare&logoColor=white&style=flat-square)](https://bfcompiler.pages.dev)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white&style=flat-square)](https://github.com/sponsors/4ster-light)
 [![Web tests](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml)
 [![Deploy](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml)
 
