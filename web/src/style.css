@@ -888,6 +888,8 @@ code {
 	grid-template-columns: repeat(16, minmax(47px, 1fr));
 	gap: 5px;
 	overflow-x: auto;
+	list-style: none;
+	margin: 0;
 	padding: 3px;
 	padding-bottom: 7px;
 }

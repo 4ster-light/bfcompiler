@@ -27,7 +27,7 @@ function element<T extends HTMLElement>(id: string): T {
 const code = element<HTMLTextAreaElement>("code")
 const input = element<HTMLTextAreaElement>("input")
 const example = element<HTMLSelectElement>("example")
-const output = element<HTMLOutputElement>("output")
+const output = element<HTMLElement>("output")
 const runButton = element<HTMLButtonElement>("run")
 const stepButton = element<HTMLButtonElement>("step")
 const resetButton = element<HTMLButtonElement>("reset")
@@ -150,9 +150,8 @@ function renderMemory(): void {
 	for (let index = 0; index < PAGE_SIZE; index += 1) {
 		const address = memoryStart + index
 		const value = values[index] ?? 0
-		const cell = document.createElement("div")
+		const cell = document.createElement("li")
 		cell.className = `memory-cell${address === pointer ? " current" : ""}${value !== 0 ? " nonzero" : ""}`
-		cell.setAttribute("role", "listitem")
 		cell.setAttribute(
 			"aria-label",
 			`Cell ${address}: ${value}${address === pointer ? ", current pointer" : ""}`

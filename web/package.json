@@ -11,6 +11,7 @@
 		"preview": "vite preview",
 		"test": "playwright test",
 		"fmt": "biome format --write .",
+		"check": "biome check .",
 		"lint": "biome check --fix ."
 	},
 	"devDependencies": {

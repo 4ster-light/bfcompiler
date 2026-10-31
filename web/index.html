@@ -103,6 +103,7 @@
 				<div class="local-note">
 					<span class="local-icon" aria-hidden="true">
 						<svg viewBox="0 0 24 24">
+							<title>Runs locally</title>
 							<path
 								d="M12 3 4.5 6v5.2c0 4.6 3.1 8.1 7.5 9.8 4.4-1.7 7.5-5.2 7.5-9.8V6L12 3Z"
 							/>
@@ -212,6 +213,7 @@
 							<span id="editor-help">Insert a command</span>
 							<div
 								class="command-buttons"
+								role="toolbar"
 								aria-label="Insert Brainfuck commands"
 							>
 								<button
@@ -320,12 +322,19 @@
 								</button>
 							</div>
 						</div>
-						<pre
+						<!-- Keep scrollable output focusable for keyboard users. -->
+						<section
 							class="output"
 							id="output"
 							tabindex="0"
 							aria-label="Program output"
-						><span class="output-placeholder">Program output will appear here.<br />Choose <strong>Run program</strong> to execute the current code.</span></pre>
+						>
+							<span class="output-placeholder"
+								>Program output will appear here.<br>Choose
+								<strong>Run program</strong>
+								to execute the current code.</span
+							>
+						</section>
 						<div class="input-section">
 							<div class="input-label-row">
 								<label for="input">Program input <span>OPTIONAL</span></label
@@ -386,13 +395,13 @@
 							</button>
 						</div>
 					</div>
-					<div
+					<!-- Keep the scrollable tape focusable for keyboard users. -->
+					<ol
 						class="memory-tape"
 						id="memory-tape"
-						role="list"
 						aria-label="Memory cells"
 						tabindex="0"
-					></div>
+					></ol>
 					<div class="memory-footer">
 						<span><i aria-hidden="true"></i> Current pointer</span
 						><button type="button" class="text-button" id="jump-pointer">
