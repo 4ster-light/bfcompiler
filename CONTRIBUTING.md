@@ -23,9 +23,10 @@ Web playground:
 ```bash
 cd web
 pnpm install --frozen-lockfile
-pnpm test:ui:install  # first run only; Playwright Chromium
+pnpm exec playwright install chromium  # first run only
 pnpm test
 pnpm wasm && pnpm build
+pnpm check
 pnpm fmt
 pnpm lint
 ```
@@ -39,7 +40,7 @@ nix run .#web  # serves the built bundle on http://localhost:4173
 nix fmt        # nixfmt
 ```
 
-The checks are `bf`, `web`, `rustfmt`, `clippy`, `tests`, `nixfmt`, `web-format`, and `smoke`.
+The checks are `bf`, `web`, `rustfmt`, `clippy`, `tests`, `nixfmt`, `web-check`, and `smoke`.
 
 `nix build` only sees files tracked by Git, so run `git add` after adding new crates or web files. For a quick check before staging, `nix build path:.#web` includes untracked files.
 

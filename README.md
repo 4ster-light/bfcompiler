@@ -46,7 +46,7 @@ nix flake check       # packages, tests, Clippy, formatting
 nix fmt               # format Nix files with nixfmt
 ```
 
-`nix flake check` runs these checks: `bf`, `web`, `rustfmt`, `clippy`, `tests`, `nixfmt`, `web-format`, and `smoke`.
+`nix flake check` runs these checks: `bf`, `web`, `rustfmt`, `clippy`, `tests`, `nixfmt`, `web-check`, and `smoke`.
 
 `nix run .#web` serves the bundled files with nixpkgs' `static-server`; it does not start a Vite dev server. To use another port:
 
@@ -73,7 +73,7 @@ Other reasonable workflows, depending on what you need:
 | --- | --- | --- |
 | Hermetic Nix build | `nix build .#web` | Reproducible, but needs a hash update when pnpm deps change |
 | Fast UI iteration | `nix develop`, then `pnpm dev` | No Nix rebuild; uses the normal pnpm store |
-| CI / Cloudflare Pages | `pnpm install --frozen-lockfile && pnpm build` | No Nix required; depends on the CI-provided Rust/Wasm toolchain |
+| CI / Cloudflare Pages | `pnpm install --frozen-lockfile && pnpm wasm && pnpm build` | No Nix required; depends on the CI-provided Rust/Wasm toolchain |
 | Plain static output | `pnpm wasm && pnpm build` | Produces `web/dist`; serve it with any static file server |
 
 The flake deliberately does not vendor `node_modules`, run an impure network install during a Nix build, or use `buildNpmPackage` (which expects an npm lockfile).
@@ -119,8 +119,10 @@ pnpm dev
 `pnpm dev` rebuilds the WebAssembly bindings through its `predev` hook. `pnpm build` only runs Vite, so use `pnpm wasm && pnpm build` for a complete production bundle. Other useful commands:
 
 ```bash
+pnpm exec playwright install chromium  # first run only
 pnpm test             # Playwright UI tests
-pnpm fmt              # Biome formatting
+pnpm check            # Biome formatting + lint checks
+pnpm fmt              # Biome formatting with fixes
 pnpm lint             # Biome checks with safe fixes
 pnpm wasm && pnpm build
 ```

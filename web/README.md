@@ -41,11 +41,12 @@ Open the URL printed by Vite (normally `http://localhost:5173`). `pnpm dev` rebu
 ## Test and build
 
 ```sh
-pnpm test:ui:install  # one-time Chromium download
+pnpm exec playwright install chromium  # one-time Chromium download
 pnpm test
 pnpm wasm && pnpm build
 pnpm preview          # Vite preview
-pnpm fmt              # Biome formatting
+pnpm check            # Biome formatting + lint checks
+pnpm fmt              # Biome formatting with fixes
 pnpm lint             # Biome checks with safe fixes
 ```
 
@@ -75,4 +76,4 @@ No deployment is performed by this repository. For a Pages project:
 - **Node version:** 22 or newer
 - **pnpm:** 12 or newer
 
-The build environment must also provide Rust, `wasm32-unknown-unknown`, and `wasm-pack`. `pnpm build` regenerates the bindings, so the checked-in `src/wasm` output is not required. `_headers` is copied into the bundle for basic security and immutable asset caching headers.
+The build environment must also provide Rust, `wasm32-unknown-unknown`, and `wasm-pack`. `pnpm wasm` regenerates the bindings, so the checked-in `src/wasm` output is not required. `_headers` is copied into the bundle for basic security and immutable asset caching headers.
