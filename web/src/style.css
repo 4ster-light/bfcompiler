@@ -494,7 +494,6 @@ kbd {
 	font-size: 12px;
 	font-weight: 600;
 	transition:
-		background 120ms,
 		transform 120ms,
 		border-color 120ms;
 }
