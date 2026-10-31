@@ -42,12 +42,12 @@ Open the URL printed by Vite (normally `http://localhost:5173`). `pnpm dev` rebu
 
 ```sh
 pnpm exec playwright install chromium  # one-time Chromium download
-pnpm test
-pnpm wasm && pnpm build
-pnpm preview          # Vite preview
-pnpm check            # Biome formatting + lint checks
-pnpm fmt              # Biome formatting with fixes
-pnpm lint             # Biome checks with safe fixes
+pnpm test                              # run all playwright ui tests
+pnpm wasm && pnpm build                # run wasm-pack and vite build
+pnpm preview                           # Vite preview
+pnpm check                             # Biome formatting + lint checks
+pnpm fmt                               # Biome formatting with fixes
+pnpm lint                              # Biome checks with safe fixes
 ```
 
 The production static bundle is written to `dist/`. `pnpm build` only runs Vite; run `pnpm wasm` first when the Rust bindings changed. `nix run .#web` serves the Nix-built bundle with nixpkgs' `static-server`.
@@ -77,9 +77,9 @@ nix develop -c wrangler pages deploy --branch=main
 
 Add `--commit-dirty=true` when the working tree has uncommitted changes, otherwise wrangler only warns. CI builds the bundle with the non-Nix commands (`pnpm install --frozen-lockfile && pnpm wasm && pnpm build`) and then deploys `dist/`. It needs these repository secrets:
 
-| Secret | Purpose |
-| --- | --- |
-| `CLOUDFLARE_API_TOKEN` | API token with the *Cloudflare Pages: Edit* permission |
+| Secret                  | Purpose                                                |
+|-------------------------|--------------------------------------------------------|
+| `CLOUDFLARE_API_TOKEN`  | API token with the *Cloudflare Pages: Edit* permission |
 | `CLOUDFLARE_ACCOUNT_ID` | Account id printed by `nix develop -c wrangler whoami` |
 
 Create the token at <https://dash.cloudflare.com/profile/api-tokens> with *Create Token* → *Create Custom Token*: permission **Account → Cloudflare Pages → Edit**, account resources limited to your own account, then store it as the `CLOUDFLARE_API_TOKEN` secret.
