@@ -7,4 +7,5 @@ result
 /web/src/wasm
 /web/test-results
 /web/playwright-report
+/web/.wrangler/
 *.local

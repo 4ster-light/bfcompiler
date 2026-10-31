@@ -127,7 +127,7 @@ pnpm lint             # Biome checks with safe fixes
 pnpm wasm && pnpm build
 ```
 
-See [`web/README.md`](web/README.md) for browser tests and future Cloudflare Pages settings. No deployment happens automatically.
+See [`web/README.md`](web/README.md) for browser tests and Cloudflare Pages details. Pushes to `main` that touch the playground deploy to <https://bfcompiler.pages.dev> through `.github/workflows/pages.yml`.
 
 ## Development checks
 
@@ -142,7 +142,7 @@ nix develop -c pnpm test
 nix develop -c pnpm wasm && pnpm build
 ```
 
-For a Nix-only verification, run `nix flake check`. Format the flake with `nix fmt` or `nixfmt flake.nix`.
+For a Nix-only verification, run `nix flake check`. Format the flake with `nix fmt`.
 
 ## License
 

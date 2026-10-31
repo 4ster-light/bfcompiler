@@ -1,0 +1,9 @@
+{
+	// Cloudflare Pages project behind https://bfcompiler.pages.dev.
+	// With this file in place `wrangler pages deploy` run from web/ needs no
+	// flags: the project name and the build output directory come from here.
+	"$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+	"name": "bfcompiler",
+	"pages_build_output_dir": "./dist",
+	"compatibility_date": "2026-10-31"
+}

@@ -68,12 +68,24 @@ The flake does not vendor `node_modules`, perform an impure network install duri
 
 ## Cloudflare Pages
 
-No deployment is performed by this repository. For a Pages project:
+<https://bfcompiler.pages.dev> is deployed by [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) on every push to `main` that touches the playground or its Rust dependencies, and on manual `workflow_dispatch`. `wrangler.jsonc` pins the project name and the build output directory, so a deploy run from `web/` takes no flags. Wrangler comes from the dev shell; authentication comes from `wrangler login` or `CLOUDFLARE_API_TOKEN`:
 
-- **Root directory:** `web`
-- **Build command:** `pnpm install --frozen-lockfile && pnpm wasm && pnpm build`
-- **Build output directory:** `dist`
-- **Node version:** 22 or newer
-- **pnpm:** 12 or newer
+```bash
+cd web
+nix develop -c wrangler pages deploy --branch=main
+```
 
-The build environment must also provide Rust, `wasm32-unknown-unknown`, and `wasm-pack`. `pnpm wasm` regenerates the bindings, so the checked-in `src/wasm` output is not required. `_headers` is copied into the bundle for basic security and immutable asset caching headers.
+Add `--commit-dirty=true` when the working tree has uncommitted changes, otherwise wrangler only warns. CI builds the bundle with the non-Nix commands (`pnpm install --frozen-lockfile && pnpm wasm && pnpm build`) and then deploys `dist/`. It needs these repository secrets:
+
+| Secret | Purpose |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | API token with the *Cloudflare Pages: Edit* permission |
+| `CLOUDFLARE_ACCOUNT_ID` | Account id printed by `nix develop -c wrangler whoami` |
+
+Create the token at <https://dash.cloudflare.com/profile/api-tokens> with *Create Token* → *Create Custom Token*: permission **Account → Cloudflare Pages → Edit**, account resources limited to your own account, then store it as the `CLOUDFLARE_API_TOKEN` secret.
+
+`_headers` is copied into the bundle for basic security and immutable asset caching headers. The bundle is fully static: no Pages Functions and no server-side rendering.
+
+Project names are global across all Cloudflare accounts and the `*.pages.dev` subdomain is the project name, so a taken name gets a random suffix. `bfcompiler` was free; `brainfuck.pages.dev` and `bf.pages.dev` belong to other accounts.
+
+To create a *new* Pages project, run `nix develop -c wrangler pages project create <name> --production-branch main --force`. That is the only place `--force` is needed: without it wrangler delegates to the Workers-based Pages flow, which rejects a Pages-style `wrangler.jsonc`. Once the project exists, deploys go straight to Cloudflare Pages and must omit `--force`.
