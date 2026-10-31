@@ -1,2 +1,7 @@
 allowBuilds:
   esbuild: true
+  # workerd ships inside wrangler. The Wrangler GitHub action installs
+  # wrangler into this workspace at deploy time, and pnpm 12 aborts that
+  # install with ERR_PNPM_IGNORED_BUILDS unless workerd may run its build
+  # script. wrangler itself stays out of package.json.
+  workerd: true

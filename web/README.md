@@ -84,7 +84,7 @@ Add `--commit-dirty=true` when the working tree has uncommitted changes, otherwi
 
 Create the token at <https://dash.cloudflare.com/profile/api-tokens> with *Create Token* → *Create Custom Token*: permission **Account → Cloudflare Pages → Edit**, account resources limited to your own account, then store it as the `CLOUDFLARE_API_TOKEN` secret.
 
-The workflow runs wrangler through `npx --yes wrangler@4` rather than the Wrangler GitHub action. The action installs wrangler into the checkout with `pnpm add`, which trips the `allowBuilds` policy in `pnpm-workspace.yaml` and would also change the lockfile that the Nix `pnpmDeps` hash is pinned to. Adding wrangler to `web/package.json` is not needed either: CI and the dev shell each provide their own copy.
+The workflow uses the Wrangler GitHub action, which installs wrangler into the checkout with `pnpm add` instead of taking it from `package.json`. That install only succeeds because `pnpm-workspace.yaml` lets `workerd` run its build script; without the `allowBuilds` entry, pnpm 12 aborts with `ERR_PNPM_IGNORED_BUILDS`. Keeping wrangler out of `web/package.json` also keeps `pnpm-lock.yaml` and the Nix `pnpmDeps` hash untouched. Locally, use the wrangler from the dev shell.
 
 `_headers` is copied into the bundle for basic security and immutable asset caching headers. The bundle is fully static: no Pages Functions and no server-side rendering.
 
