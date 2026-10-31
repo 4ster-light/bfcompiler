@@ -19,7 +19,6 @@ concurrency:
 
 permissions:
   contents: read
-  deployments: write
 
 jobs:
   deploy:
@@ -63,11 +62,12 @@ jobs:
         run: pnpm run build
 
       # Project name and output directory come from web/wrangler.jsonc.
+      # npx installs wrangler into its own cache, which keeps the strict
+      # `allowBuilds` policy in web/pnpm-workspace.yaml untouched (the
+      # wrangler GitHub action would `pnpm add wrangler` and fail on workerd).
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: "4"
-          workingDirectory: web
-          command: pages deploy --branch=${{ github.ref_name }}
+        working-directory: web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx --yes wrangler@4 pages deploy --branch=$GITHUB_REF_NAME
