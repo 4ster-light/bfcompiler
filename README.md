@@ -1,18 +1,23 @@
-# [BFCompiler](https://bfcompiler.pages.dev)
+# BFCompiler
 
-[![Version](https://img.shields.io/badge/version-1.0.0-2f6f4e?style=flat-square)](Cargo.toml)
-[![Rust](https://img.shields.io/badge/rust-1.99.1-dea584?logo=rust&logoColor=white&style=flat-square)](https://www.rust-lang.org)
+[![Version](https://img.shields.io/badge/version-1.0.0-2f6f4e?style=flat-square&logo=github&logoColor=white)](Cargo.toml)
 [![Nix flake](https://img.shields.io/badge/Nix-flake-5277C3?logo=nixos&logoColor=white&style=flat-square)](flake.nix)
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-Wasm-654FF0?logo=webassembly&logoColor=white&style=flat-square)](crates/web)
-[![Website](https://img.shields.io/badge/website-bfcompiler.pages.dev-1f7a5a?logo=cloudflare&logoColor=white&style=flat-square)](https://bfcompiler.pages.dev)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+[![Rust 1.99.1](https://img.shields.io/badge/rust-1.99.1-dea584?logo=rust&logoColor=white&style=flat-square)](https://www.rust-lang.org)
+
+[![Website](https://img.shields.io/badge/website-bfcompiler.pages.dev-1f7a5a?logo=cloudflare&logoColor=white&style=flat-square&color=f48120)](https://bfcompiler.pages.dev)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/4ster-light/bfcompiler/pages.yml?label=deploy&style=flat-square&logo=cloudflare&logoColor=white)](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml)
+[![Web tests](https://img.shields.io/github/actions/workflow/status/4ster-light/bfcompiler/test.yml?label=web%20tests&style=flat-square&logo=githubactions&logoColor=white)](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml)
+
 [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white&style=flat-square)](https://github.com/sponsors/4ster-light)
-[![Web tests](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/test.yml)
-[![Deploy](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml/badge.svg)](https://github.com/4ster-light/bfcompiler/actions/workflows/pages.yml)
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-red?style=flat-square&logo=gnu&logoColor=white)](LICENSE)
 
 A small Brainfuck toolchain written in Rust: a command-line interpreter, a compiler, a terminal REPL, and a browser playground built with WebAssembly.
 
 > [Brainfuck](https://esolangs.org/wiki/Brainfuck) was created by Urban Müller in 1993.
+> See also the [Wikipedia article](https://en.wikipedia.org/wiki/Brainfuck).
+
+![BF Studio playground in the dark theme](docs/screenshot.png)
 
 ## Table of Contents
 
@@ -142,4 +147,10 @@ For a Nix-only verification, run `nix flake check`. Format the flake with `nix f
 
 ## License
 
-MIT
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-red?style=flat-square&logo=gnu&logoColor=white)](LICENSE)
+
+## Sponsor
+
+Consider sponsoring if you like this proyect:
+
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-EA4AAA?logo=githubsponsors&logoColor=white&style=flat-square)](https://github.com/sponsors/4ster-light)
