@@ -50,7 +50,7 @@ jobs:
             asset_name: bf-windows-x86_64.exe
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -81,6 +81,6 @@ jobs:
         shell: bash
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ./${{ matrix.asset_name }}
