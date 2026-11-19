@@ -44,7 +44,6 @@ const memoryNext = element<HTMLButtonElement>("memory-next")
 const toast = element("toast")
 const announcer = element("announcer")
 const themeToggle = element<HTMLButtonElement>("theme-toggle")
-const themeLabel = element("theme-label")
 const themeColor = document.querySelector<HTMLMetaElement>(
 	'meta[name="theme-color"]'
 )
@@ -78,7 +77,6 @@ function announce(message: string): void {
 
 function applyTheme(theme: Theme, persist = false): void {
 	document.documentElement.dataset.theme = theme
-	themeLabel.textContent = theme === "dark" ? "Light" : "Dark"
 	const action =
 		theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
 	themeToggle.setAttribute("aria-label", action)

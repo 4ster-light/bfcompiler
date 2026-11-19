@@ -33,14 +33,10 @@
 				<span class="brand-mark" aria-hidden="true">bf</span>
 				<span class="brand-name">BFCompiler</span>
 			</a>
-			<nav aria-label="Main navigation">
-				<a class="nav-link active" href="#playground" aria-current="page"
-					>Playground</a
-				>
-				<a class="nav-link" href="#guide">Language guide</a>
+			<div class="header-actions">
 				<a
-					class="nav-link github-link"
-					href="https://github.com/4ster-light/bfcompiler"
+					class="github-link"
+					href="https://github.com/4aster-light/bfcompiler"
 					target="_blank"
 					rel="noreferrer"
 				>
@@ -71,21 +67,14 @@
 					>
 						<path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z" />
 					</svg>
-					<span class="theme-label" id="theme-label">Light</span>
 				</button>
-			</nav>
+			</div>
 		</header>
 
 		<main>
 			<section class="intro" aria-labelledby="page-title">
 				<div>
-					<p class="eyebrow">
-						<span aria-hidden="true">✳</span>
-						BRAINFUCK IN THE BROWSER
-					</p>
-					<h1 id="page-title">
-						A small playground<br><span>for Brainfuck.</span>
-					</h1>
+					<h1 id="page-title">Brainfuck playground</h1>
 					<p class="intro-copy">
 						<a
 							href="https://esolangs.org/wiki/Brainfuck"
@@ -93,26 +82,10 @@
 							rel="noreferrer"
 							>Brainfuck</a
 						>
-						is a minimal esoteric language created by Urban Müller in 1993.<br
-							class="desktop-break"
-						>
-						This page runs a Rust interpreter compiled to WebAssembly. The
-						current program stays in this tab.
+						is a minimal esoteric language created by Urban Müller in 1993. This
+						page runs a Rust interpreter compiled to WebAssembly; the current
+						program stays in this tab.
 					</p>
-				</div>
-				<div class="local-note">
-					<span class="local-icon" aria-hidden="true">
-						<svg viewBox="0 0 24 24">
-							<title>Runs locally</title>
-							<path
-								d="M12 3 4.5 6v5.2c0 4.6 3.1 8.1 7.5 9.8 4.4-1.7 7.5-5.2 7.5-9.8V6L12 3Z"
-							/>
-							<path d="m8.7 12 2.1 2.1 4.7-4.8" />
-						</svg>
-					</span>
-					<div>
-						<strong>Runs locally</strong><span>No account and no uploads</span>
-					</div>
 				</div>
 			</section>
 
@@ -123,7 +96,7 @@
 			>
 				<div class="workspace-toolbar">
 					<div class="example-picker">
-						<label for="example">EXAMPLE PROGRAM</label>
+						<label for="example">Example</label>
 						<div class="select-wrap">
 							<select id="example" aria-label="Example program">
 								<option value="hello">Hello, world!</option>
@@ -171,12 +144,8 @@
 
 				<div class="workspace-grid">
 					<section class="panel editor-panel" aria-labelledby="editor-title">
-						<div class="panel-heading editor-heading">
-							<div class="file-tab">
-								<span class="file-icon" aria-hidden="true">#</span>
-								<h2 id="editor-title">main.bf</h2>
-								<span class="unsaved-dot" aria-hidden="true"></span>
-							</div>
+						<div class="panel-heading">
+							<h2 id="editor-title">Program</h2>
 							<button
 								class="icon-button"
 								id="save"
@@ -337,7 +306,7 @@
 						</section>
 						<div class="input-section">
 							<div class="input-label-row">
-								<label for="input">Program input <span>OPTIONAL</span></label
+								<label for="input">Program input (optional)</label
 								><span id="input-count">0 bytes</span>
 							</div>
 							<textarea
@@ -361,9 +330,7 @@
 				<section class="memory-panel" aria-labelledby="memory-title">
 					<div class="memory-heading">
 						<div>
-							<h2 id="memory-title">
-								Memory tape <span class="beta-label">TAPE STATE</span>
-							</h2>
+							<h2 id="memory-title">Memory tape</h2>
 							<p>
 								Each cell holds one byte, from 0 to 255. The highlighted cell is
 								where the pointer is.
@@ -423,11 +390,15 @@
 
 			<section class="guide" id="guide" aria-labelledby="guide-title">
 				<div class="guide-intro">
-					<p class="eyebrow">THE LANGUAGE</p>
-					<h2 id="guide-title">Eight commands<br>and a tape.</h2>
+					<h2 id="guide-title">The eight commands</h2>
 					<p>
 						Brainfuck was created by Urban Müller in 1993. A program moves a
 						pointer along a tape of byte cells and uses these eight commands.
+					</p>
+					<p>
+						To try it: <code>+++++.</code> prints one byte. You can also choose
+						the alphabet example and use Step to advance one instruction at a
+						time.
 					</p>
 					<p class="credit">
 						Read more at
@@ -439,14 +410,6 @@
 							><span class="sr-only"> (opens in a new tab)</span></a
 						>.
 					</p>
-					<div class="guide-tip">
-						<span aria-hidden="true">•</span>
-						<p>
-							<strong>To try it</strong><code>+++++.</code>
-							prints one byte. You can also choose the alphabet example and use
-							Step to advance one instruction at a time.
-						</p>
-					</div>
 				</div>
 				<div class="command-guide">
 					<div class="guide-row">
@@ -455,7 +418,6 @@
 							<strong>Move right</strong
 							><span>Move the pointer to the next cell.</span>
 						</div>
-						<kbd>pointer →</kbd>
 					</div>
 					<div class="guide-row">
 						<code>&lt;</code>
@@ -463,7 +425,6 @@
 							<strong>Move left</strong
 							><span>Move the pointer to the previous cell.</span>
 						</div>
-						<kbd>← pointer</kbd>
 					</div>
 					<div class="guide-row">
 						<code>+</code>
@@ -471,7 +432,6 @@
 							<strong>Increment</strong
 							><span>Add one to the current cell.</span>
 						</div>
-						<kbd>cell + 1</kbd>
 					</div>
 					<div class="guide-row">
 						<code>-</code>
@@ -479,7 +439,6 @@
 							<strong>Decrement</strong
 							><span>Subtract one from the current cell.</span>
 						</div>
-						<kbd>cell − 1</kbd>
 					</div>
 					<div class="guide-row">
 						<code>.</code>
@@ -487,7 +446,6 @@
 							<strong>Output</strong
 							><span>Write the current cell as a byte.</span>
 						</div>
-						<kbd>write</kbd>
 					</div>
 					<div class="guide-row">
 						<code>,</code>
@@ -495,7 +453,6 @@
 							<strong>Input</strong
 							><span>Read one byte into the current cell.</span>
 						</div>
-						<kbd>read</kbd>
 					</div>
 					<div class="guide-row">
 						<code>[</code>
@@ -505,7 +462,6 @@
 								>Jump past <code>]</code> if the current cell is zero.</span
 							>
 						</div>
-						<kbd>if 0, jump</kbd>
 					</div>
 					<div class="guide-row">
 						<code>]</code>
@@ -516,18 +472,12 @@
 								zero.</span
 							>
 						</div>
-						<kbd>if ≠ 0, jump</kbd>
 					</div>
 				</div>
 			</section>
 		</main>
 
 		<footer>
-			<a class="brand footer-brand" href="/"
-				><span class="brand-mark" aria-hidden="true">bf</span
-				><span class="brand-name">BFCompiler</span></a
-			>
-			<p>A small Brainfuck playground.</p>
 			<span
 				>Brainfuck by Urban Müller, 1993 <span aria-hidden="true">·</span> Rust
 				+ WebAssembly</span
